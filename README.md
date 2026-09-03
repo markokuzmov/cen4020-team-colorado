@@ -1,2 +1,2 @@
-# cen4020-team-colorado
+# InCollege
 LinkedIn but for college students
