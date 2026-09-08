@@ -83,4 +83,4 @@ The program presents an interactive menu:
 
 | Name | Role |
 |------|------|
-| Oomat Latipov | | Developer |
+| Oomat Latipov | | Developer
