@@ -1,0 +1,15 @@
+# Compiled COBOL executables
+incollege
+incollege.exe
+*.o
+*.so
+
+# Runtime data (generated at runtime — do not commit user data)
+data/users.dat
+
+# macOS
+.DS_Store
+
+# Editor artifacts
+*.swp
+*~
