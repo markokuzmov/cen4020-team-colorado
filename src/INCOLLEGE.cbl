@@ -385,7 +385,61 @@ USER-LOGIN.
         WITH POINTER WS-STRING-PTR
     END-STRING
     COMPUTE WS-LINE-LEN = WS-STRING-PTR - 1
-    PERFORM WRITE-LINE.
+    PERFORM WRITE-LINE
+    PERFORM POST-LOGIN-MENU.
+
+*> ----------------------------------------------------------------
+*> POST-LOGIN-MENU: authenticated navigation until the user logs out
+*> ----------------------------------------------------------------
+POST-LOGIN-MENU.
+    PERFORM UNTIL WS-RUNNING = "N"
+        PERFORM WRITE-BLANK-LINE
+        MOVE "--- Main Menu ---" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("--- Main Menu ---") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  1. Search for a Job" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  1. Search for a Job") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  2. Find Someone You Know" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  2. Find Someone You Know") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  3. Learn a New Skill" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  3. Learn a New Skill") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  4. Logout" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  4. Logout") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "Enter your choice: " TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("Enter your choice: ") TO WS-LINE-LEN
+        PERFORM WRITE-PROMPT
+        PERFORM READ-INPUT-LINE
+        MOVE WS-LINE-BUFFER(1:1) TO WS-MENU-CHOICE
+
+        EVALUATE WS-MENU-CHOICE
+            WHEN "1"
+                MOVE "This feature is under construction." TO WS-LINE-BUFFER
+                MOVE FUNCTION LENGTH("This feature is under construction.")
+                    TO WS-LINE-LEN
+                PERFORM WRITE-LINE
+            WHEN "2"
+                MOVE "This feature is under construction." TO WS-LINE-BUFFER
+                MOVE FUNCTION LENGTH("This feature is under construction.")
+                    TO WS-LINE-LEN
+                PERFORM WRITE-LINE
+            WHEN "3"
+                CONTINUE
+            WHEN "4"
+                MOVE "Logging out..." TO WS-LINE-BUFFER
+                MOVE FUNCTION LENGTH("Logging out...") TO WS-LINE-LEN
+                PERFORM WRITE-LINE
+                MOVE "N" TO WS-RUNNING
+            WHEN OTHER
+                MOVE "Invalid choice. Please try again." TO WS-LINE-BUFFER
+                MOVE FUNCTION LENGTH("Invalid choice. Please try again.")
+                    TO WS-LINE-LEN
+                PERFORM WRITE-LINE
+        END-EVALUATE
+    END-PERFORM.
 
 *> ----------------------------------------------------------------
 *> VERIFY-CREDENTIALS: find a matching username+password in the
