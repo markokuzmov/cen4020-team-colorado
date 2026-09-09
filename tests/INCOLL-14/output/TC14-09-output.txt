@@ -1,0 +1,57 @@
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+1
+
+--- Create New Account ---
+Enter username:
+duplicateuser
+Enter password:
+Hello@123
+Account created successfully!
+Welcome to InCollege, duplicateuser!
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+1
+
+--- Create New Account ---
+Enter username:
+duplicateuser
+Enter password:
+College@26
+Username already exists. Please choose another.
+
+--- Create New Account ---
+Enter username:
+newuser
+Enter password:
+College@26
+Account created successfully!
+Welcome to InCollege, newuser!
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+3
+Goodbye!

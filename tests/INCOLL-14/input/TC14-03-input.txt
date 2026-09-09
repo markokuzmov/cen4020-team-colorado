@@ -1,0 +1,13 @@
+TC14-03 - Exactly 12 Character Password
+
+Username: testuser3
+Password: Welcome@1234
+
+Expected:
+Password should be accepted because it is exactly 12 characters
+and satisfies all password requirements.
+
+Actual:
+Password was accepted and the account was created successfully.
+
+Status: PASS

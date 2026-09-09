@@ -1,0 +1,35 @@
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+1
+
+--- Create New Account ---
+Enter username:
+testuser7
+Enter password:
+Hello@abc
+Password must have at least one digit (0-9).
+Please try a different password.
+Enter password:
+Abcd@123
+Account created successfully!
+Welcome to InCollege, testuser7!
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+3
+Goodbye!

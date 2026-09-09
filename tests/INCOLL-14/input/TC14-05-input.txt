@@ -1,0 +1,13 @@
+TC14-05 - Password More Than 12 Characters
+
+Username: testuser5
+Password: Welcome@12345
+
+Expected:
+Password should be rejected because it contains more than 12 characters.
+
+Actual:
+The 13-character password was accepted and the account was created successfully.
+The program did not display the expected password-length error.
+
+Status: FAIL
