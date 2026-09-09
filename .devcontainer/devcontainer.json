@@ -1,0 +1,45 @@
+// .devcontainer/devcontainer.json
+{
+  "name": "Software Engineering - COBOL Project Environment",
+
+  // Start with a clean, stable Ubuntu base image managed by Microsoft
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+
+  // Install GnuCOBOL (the standard open-source COBOL compiler) and build tools on startup
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y gnucobol build-essential",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bitlang.cobol",       // The gold standard for COBOL syntax highlighting and linting
+        "ms-vscode.hexeditor", // Essential if they are reading/debugging raw data files or records
+        "formulahendry.code-runner" // Adds a play button to compile and run the open file
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+
+        // Tells the extension to optimize linting for GnuCOBOL
+        "cobol.compiler_flavor": "gnucobol",
+
+        // Critical for COBOL: Force spaces instead of tabs so code never shifts between students
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+
+        //It draws vertical lines in VS Code at the exact column boundaries
+        // Column 6 (End of sequence), 7 (Indicator), 11 (End of Area A), and 72 (End of Area B)
+        "editor.rulers": [6, 7, 11, 72],
+
+        // Ensure the editor clearly flags trailing whitespace or alignment drift
+        "editor.renderWhitespace": "boundary",
+
+        // Play button: compile with GnuCOBOL and run the resulting executable
+        "code-runner.executorMapByFileExtension": {
+          ".cbl": "cd $dir && cobc -free -x -o $fileNameWithoutExt $fileName && ./$fileNameWithoutExt"
+        },
+        "code-runner.runInTerminal": true
+      }
+    }
+  },
+
+  "remoteUser": "vscode"
+}
