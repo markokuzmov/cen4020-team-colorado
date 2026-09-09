@@ -1,0 +1,82 @@
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 1
+ 
+--- Create New Account ---
+Enter username: alice01
+Enter password: Passw0rd!
+Account created successfully!
+Welcome to InCollege, alice01!
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 2
+ 
+--- Log In ---
+Enter username: alice01
+Enter password: Passw0rd!
+You have successfully logged in.
+Welcome, alice01!
+ 
+--- Main Menu ---
+  1. Search for a Job
+  2. Find Someone You Know
+  3. Learn a New Skill
+  4. Logout
+Enter your choice: 1
+This feature is under construction.
+ 
+--- Main Menu ---
+  1. Search for a Job
+  2. Find Someone You Know
+  3. Learn a New Skill
+  4. Logout
+Enter your choice: 2
+This feature is under construction.
+ 
+--- Main Menu ---
+  1. Search for a Job
+  2. Find Someone You Know
+  3. Learn a New Skill
+  4. Logout
+Enter your choice: 3
+ 
+--- Learn a New Skill ---
+  1. Communication
+  2. Leadership
+  3. Time Management
+  4. Problem Solving
+  5. Networking
+  6. Go Back
+Enter your choice: 2
+This skill is under construction.
+ 
+--- Learn a New Skill ---
+  1. Communication
+  2. Leadership
+  3. Time Management
+  4. Problem Solving
+  5. Networking
+  6. Go Back
+Enter your choice: 6
+ 
+--- Main Menu ---
+  1. Search for a Job
+  2. Find Someone You Know
+  3. Learn a New Skill
+  4. Logout
+Enter your choice: 4
+Logging out...
