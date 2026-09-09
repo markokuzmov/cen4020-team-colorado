@@ -1,0 +1,10 @@
+TC16-10 - Go Back
+
+Expected:
+Selecting Go Back from the Learn a New Skill menu should return
+the user to the post-login main menu.
+
+Actual:
+Selecting option 6 returned the user to the post-login main menu successfully.
+
+Status: PASS

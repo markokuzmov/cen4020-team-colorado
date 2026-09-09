@@ -1,0 +1,11 @@
+TC16-01 - Valid Login
+
+Expected:
+Valid credentials should successfully log the user in.
+
+Actual:
+The user successfully logged in and the program displayed:
+"You have successfully logged in."
+The post-login main menu was displayed and Logout worked correctly.
+
+Status: PASS

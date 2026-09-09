@@ -1,0 +1,15 @@
+TC16-08 - Learn a New Skill Menu
+
+Expected:
+The Learn a New Skill option should display 5 skills and a Go Back option.
+
+Actual:
+The program displayed:
+1. Communication
+2. Leadership
+3. Time Management
+4. Problem Solving
+5. Networking
+6. Go Back
+
+Status: PASS
