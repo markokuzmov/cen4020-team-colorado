@@ -427,12 +427,62 @@ POST-LOGIN-MENU.
                     TO WS-LINE-LEN
                 PERFORM WRITE-LINE
             WHEN "3"
-                CONTINUE
+                PERFORM LEARN-SKILL-MENU
             WHEN "4"
                 MOVE "Logging out..." TO WS-LINE-BUFFER
                 MOVE FUNCTION LENGTH("Logging out...") TO WS-LINE-LEN
                 PERFORM WRITE-LINE
                 MOVE "N" TO WS-RUNNING
+            WHEN OTHER
+                MOVE "Invalid choice. Please try again." TO WS-LINE-BUFFER
+                MOVE FUNCTION LENGTH("Invalid choice. Please try again.")
+                    TO WS-LINE-LEN
+                PERFORM WRITE-LINE
+        END-EVALUATE
+    END-PERFORM.
+
+*> ----------------------------------------------------------------
+*> LEARN-SKILL-MENU: list available skills until the user goes back
+*> ----------------------------------------------------------------
+LEARN-SKILL-MENU.
+    MOVE SPACE TO WS-MENU-CHOICE
+    PERFORM UNTIL WS-MENU-CHOICE = "6"
+        PERFORM WRITE-BLANK-LINE
+        MOVE "--- Learn a New Skill ---" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("--- Learn a New Skill ---") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  1. Communication" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  1. Communication") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  2. Leadership" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  2. Leadership") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  3. Time Management" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  3. Time Management") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  4. Problem Solving" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  4. Problem Solving") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  5. Networking" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  5. Networking") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  6. Go Back" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  6. Go Back") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "Enter your choice: " TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("Enter your choice: ") TO WS-LINE-LEN
+        PERFORM WRITE-PROMPT
+        PERFORM READ-INPUT-LINE
+        MOVE WS-LINE-BUFFER(1:1) TO WS-MENU-CHOICE
+
+        EVALUATE WS-MENU-CHOICE
+            WHEN "1" THRU "5"
+                MOVE "This skill is under construction." TO WS-LINE-BUFFER
+                MOVE FUNCTION LENGTH("This skill is under construction.")
+                    TO WS-LINE-LEN
+                PERFORM WRITE-LINE
+            WHEN "6"
+                CONTINUE
             WHEN OTHER
                 MOVE "Invalid choice. Please try again." TO WS-LINE-BUFFER
                 MOVE FUNCTION LENGTH("Invalid choice. Please try again.")
