@@ -1,0 +1,53 @@
+INCOLL-13 - Dual I/O Framework & Mirroring Consistency Tests
+
+Executed against: feature/post_login @ c77e74a, compiled with
+`cobc -x -free -o incollege src/INCOLLEGE.cbl` (GnuCOBOL 4.0).
+Fixtures: InCollege-Input.txt / InCollege-Output.txt (this folder) are the
+scripted input and the program's own generated output for TC13-01.
+InCollege-ConsoleCapture-forComparison.txt is `./incollege > file` from the
+same run, i.e. what actually printed to the terminal, used to diff against
+InCollege-Output.txt for TC13-01.
+
+TC13-01 - Full Session Console vs File Match
+Steps: create account, log in, Search for a Job, Find Someone You Know,
+Learn a New Skill (pick one, Go Back), Logout.
+Expected: InCollege-Output.txt identical line-for-line to the console.
+Actual: NOT identical. Console = 82 lines, InCollege-Output.txt = 94 lines.
+Status: FAIL - see INCOLL-17, INCOLL-18
+
+TC13-02 - Input File Runs Out Mid-Flow
+Steps: input file contains only "1" (Create New Account), nothing else.
+Expected: program does not crash.
+Actual: hits EOF on the username prompt's READ, closes both I/O files, and
+STOP RUNs cleanly. Exit code 0.
+Status: PASS
+
+TC13-03 - Blank Line Where a Menu Choice Is Expected
+Steps: input file's first line is blank, second line is "3".
+Expected: parser does not misalign; blank line handled gracefully.
+Actual: blank line -> "Invalid choice. Please try again.", menu re-displays,
+next line ("3") exits normally.
+Status: PASS
+
+TC13-04 - Max-Length (12-char) Password Echoed Exactly
+Steps: register with password "Abcdefgh12!$" (12 chars, upper/digit/special).
+Expected: echoed and mirrored exactly, no truncation.
+Actual: both console and InCollege-Output.txt show "Abcdefgh12!$" in full.
+Status: PASS
+
+TC13-05 - Output File Overwritten (Not Appended) Each Run
+Steps: run the program twice in a row (choice "3", Exit, each time);
+compare InCollege-Output.txt line count after each run.
+Expected/Actual: 12 lines after run 1, 12 lines after run 2 (would be 24 if
+appending). Confirms README's "Overwritten on each run" claim.
+Status: PASS
+
+Known bugs (see INCOLL-17, INCOLL-18 in Jira, both linked as blocking this
+ticket):
+- INCOLL-17: trailing spaces preserved on console, stripped in the file
+  (breaks banner centering / prompt padding in InCollege-Output.txt).
+- INCOLL-18: WRITE-PROMPT uses DISPLAY ... WITH NO ADVANCING so a prompt and
+  its echoed input print as one console line, but each WRITE OUTPUT-RECORD
+  is always its own line-sequential record, so the file has that same
+  prompt+input as two lines. This is the reason TC13-01 fails and the
+  console/file line counts don't match.
