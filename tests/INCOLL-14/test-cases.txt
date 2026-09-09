@@ -1,0 +1,53 @@
+INCOLL-14 - Registration, Password Rule & Boundary Tests
+
+TC14-01 - Valid Registration
+Username: testuser1
+Password: Hello@123
+Expected: Account should be created successfully.
+Status: NOT EXECUTED
+
+TC14-02 - Exactly 8 Character Password
+Username: testuser2
+Password: Abcd@123
+Expected: Password should be accepted.
+Status: NOT EXECUTED
+
+TC14-03 - Exactly 12 Character Password
+Username: testuser3
+Password: Welcome@1234
+Expected: Password should be accepted.
+Status: NOT EXECUTED
+
+TC14-04 - Password Below 8 Characters
+Username: testuser4
+Password: Ab@1234
+Expected: Password should be rejected.
+Status: NOT EXECUTED
+
+TC14-05 - Password Above 12 Characters
+Username: testuser5
+Password: Welcome@12345
+Expected: Password should be rejected.
+Status: NOT EXECUTED
+
+TC14-06 - Missing Uppercase
+Username: testuser6
+Password: hello@123
+Expected: Password should be rejected.
+Status: NOT EXECUTED
+
+TC14-07 - Missing Digit
+Username: testuser7
+Password: Hello@abc
+Expected: Password should be rejected.
+Status: NOT EXECUTED
+
+TC14-08 - Missing Special Character
+Username: testuser8
+Password: Hello1234
+Expected: Password should be rejected.
+Status: NOT EXECUTED
+
+TC14-09 - Duplicate Username
+Expected: Duplicate username should be rejected.
+Status: NOT EXECUTED
