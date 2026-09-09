@@ -1,0 +1,11 @@
+TC16-09 - Select a Skill
+
+Expected:
+Selecting any skill should display an under-construction message.
+
+Actual:
+After selecting Communication, the program displayed:
+"This skill is under construction."
+The skill menu was shown again afterward.
+
+Status: PASS

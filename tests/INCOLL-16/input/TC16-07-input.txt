@@ -1,0 +1,10 @@
+TC16-07 - Find Someone You Know
+
+Expected:
+Selecting Find Someone You Know should display an under-construction message.
+
+Actual:
+The program displayed:
+"This feature is under construction."
+
+Status: PASS

@@ -1,0 +1,10 @@
+TC16-06 - Search for a Job
+
+Expected:
+Selecting Search for a Job should display an under-construction message.
+
+Actual:
+The program displayed:
+"This feature is under construction."
+
+Status: PASS

@@ -1,0 +1,14 @@
+TC16-05 - Failed Login Followed by Successful Login
+
+Expected:
+The first invalid login attempt should fail.
+A subsequent valid login attempt should succeed.
+
+Actual:
+The first login attempt was rejected with:
+"Incorrect username/password, please try again"
+
+The second attempt with valid credentials succeeded and the user
+was logged in successfully.
+
+Status: PASS

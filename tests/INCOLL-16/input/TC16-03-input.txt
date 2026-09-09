@@ -1,0 +1,12 @@
+TC16-03 - Invalid Username
+
+Expected:
+An invalid username should be rejected and the program should allow
+another login attempt.
+
+Actual:
+The invalid username was rejected and the program displayed:
+"Incorrect username/password, please try again"
+The next valid login attempt succeeded.
+
+Status: PASS

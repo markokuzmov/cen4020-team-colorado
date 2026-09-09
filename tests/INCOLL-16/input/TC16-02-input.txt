@@ -1,0 +1,12 @@
+TC16-02 - Correct Username / Wrong Password
+
+Expected:
+The incorrect password should be rejected and the program should
+allow another login attempt.
+
+Actual:
+The incorrect password was rejected and the program displayed:
+"Incorrect username/password, please try again"
+The next valid login attempt succeeded.
+
+Status: PASS
