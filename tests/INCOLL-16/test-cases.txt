@@ -1,0 +1,45 @@
+INCOLL-16 - Authentication & Post-Login Navigation Tests
+
+TC16-01 - Valid Login
+Expected: "You have successfully logged in"
+Status: NOT EXECUTED
+
+TC16-02 - Correct Username / Wrong Password
+Expected: "Incorrect username/password, please try again"
+Status: NOT EXECUTED
+
+TC16-03 - Invalid Username
+Expected: "Incorrect username/password, please try again"
+Status: NOT EXECUTED
+
+TC16-04 - Multiple Failed Login Attempts
+Expected: Program should continue allowing attempts.
+Status: NOT EXECUTED
+
+TC16-05 - Failed Login Followed by Valid Login
+Expected: First attempt fails, second succeeds.
+Status: NOT EXECUTED
+
+TC16-06 - Search for a Job
+Expected: Under construction message.
+Status: NOT EXECUTED
+
+TC16-07 - Find Someone You Know
+Expected: Under construction message.
+Status: NOT EXECUTED
+
+TC16-08 - Learn a New Skill
+Expected: Five skills and Go Back option displayed.
+Status: NOT EXECUTED
+
+TC16-09 - Select a Skill
+Expected: Under construction message.
+Status: NOT EXECUTED
+
+TC16-10 - Go Back
+Expected: Return to previous menu.
+Status: NOT EXECUTED
+
+TC16-11 - Logout
+Expected: Program terminates normally.
+Status: NOT EXECUTED
