@@ -1,0 +1,14 @@
+TC16-04 - Multiple Failed Login Attempts
+
+Expected:
+The program should allow repeated failed login attempts without
+locking the user out.
+
+Actual:
+Three incorrect login attempts were rejected with:
+"Incorrect username/password, please try again"
+
+The program continued allowing attempts, and the fourth valid
+login attempt succeeded.
+
+Status: PASS

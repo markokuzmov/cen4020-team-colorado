@@ -8,26 +8,7 @@
   3. Exit
 ========================================
 Enter your choice:
-1
-
---- Create New Account ---
-Enter username:
-testuser5
-Enter password:
-Welcome@12345
-Account created successfully!
-Welcome to InCollege, testuser5!
-
-========================================
-          Welcome to InCollege
-    LinkedIn for College Students
-========================================
-  1. Create New Account
-  2. Log In
-  3. Exit
-========================================
-Enter your choice:
-Abcd@123
+TC14-05 - Password More Than 12 Characters
 Invalid choice. Please try again.
 
 ========================================
@@ -39,5 +20,147 @@ Invalid choice. Please try again.
   3. Exit
 ========================================
 Enter your choice:
-3
-Goodbye!
+
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+Username: testuser5
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+Password: Welcome@12345
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+Expected:
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+Password should be rejected because it contains more than 12 characters.
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+Actual:
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+The 13-character password was accepted and the account was created successfully.
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+The program did not display the expected password-length error.
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+Status: FAIL
+Invalid choice. Please try again.
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:

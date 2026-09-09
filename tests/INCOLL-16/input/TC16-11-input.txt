@@ -1,0 +1,10 @@
+TC16-11 - Logout
+
+Expected:
+Selecting Logout from the post-login main menu should log the user out normally.
+
+Actual:
+The program displayed:
+"Logging out..."
+
+Status: PASS
