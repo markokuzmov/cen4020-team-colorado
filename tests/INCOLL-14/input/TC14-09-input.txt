@@ -1,0 +1,12 @@
+TC14-09 - Duplicate Username
+
+Expected:
+The second attempt to create an account with the same username
+should be rejected.
+
+Actual:
+The duplicate username was rejected and the program displayed:
+"Username already exists. Please choose another."
+The program then allowed registration with a different username.
+
+Status: PASS

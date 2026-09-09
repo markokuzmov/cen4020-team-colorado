@@ -1,0 +1,13 @@
+TC14-02 - Exactly 8 Character Password
+
+Username: testuser2
+Password: Abcd@123
+
+Expected:
+Password should be accepted because it is exactly 8 characters
+and satisfies all password requirements.
+
+Actual:
+Password was accepted and the account was created successfully.
+
+Status: PASS

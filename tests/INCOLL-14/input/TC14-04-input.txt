@@ -1,0 +1,14 @@
+TC14-04 - Password Less Than 8 Characters
+
+Username: testuser4
+Password: Ab@1234
+
+Expected:
+Password should be rejected because it contains fewer than 8 characters.
+
+Actual:
+The password was rejected and the program displayed:
+"Password must be 8-12 characters long."
+The program then accepted the valid recovery password.
+
+Status: PASS

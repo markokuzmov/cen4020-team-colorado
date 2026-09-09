@@ -1,0 +1,13 @@
+TC14-01 - Valid Registration
+
+Username: testuser1
+Password: Hello@123
+
+Expected:
+Account should be created successfully.
+
+Actual:
+Account was created successfully and displayed:
+"Account created successfully!"
+
+Status: PASS

@@ -1,0 +1,14 @@
+TC14-08 - Missing Special Character
+
+Username: testuser8
+Password: Hello1234
+
+Expected:
+Password should be rejected because it does not contain a special character.
+
+Actual:
+The password was rejected and the program displayed:
+"Password must have at least one special character."
+The program then accepted the valid recovery password.
+
+Status: PASS
