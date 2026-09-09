@@ -4,50 +4,71 @@ TC14-01 - Valid Registration
 Username: testuser1
 Password: Hello@123
 Expected: Account should be created successfully.
-Status: NOT EXECUTED
+Status: PASS
 
 TC14-02 - Exactly 8 Character Password
 Username: testuser2
 Password: Abcd@123
 Expected: Password should be accepted.
-Status: NOT EXECUTED
+Status: PASS
 
 TC14-03 - Exactly 12 Character Password
 Username: testuser3
 Password: Welcome@1234
 Expected: Password should be accepted.
-Status: NOT EXECUTED
+Status: PASS
 
 TC14-04 - Password Below 8 Characters
 Username: testuser4
 Password: Ab@1234
 Expected: Password should be rejected.
-Status: NOT EXECUTED
+Status: PASS
 
 TC14-05 - Password Above 12 Characters
 Username: testuser5
 Password: Welcome@12345
 Expected: Password should be rejected.
-Status: NOT EXECUTED
+Status: FAIL
+Jira bug: CREATED
 
 TC14-06 - Missing Uppercase
 Username: testuser6
 Password: hello@123
 Expected: Password should be rejected.
-Status: NOT EXECUTED
+Status: PASS
 
 TC14-07 - Missing Digit
 Username: testuser7
 Password: Hello@abc
 Expected: Password should be rejected.
-Status: NOT EXECUTED
+Status: PASS
 
 TC14-08 - Missing Special Character
 Username: testuser8
 Password: Hello1234
 Expected: Password should be rejected.
-Status: NOT EXECUTED
+Status: PASS
 
 TC14-09 - Duplicate Username
 Expected: Duplicate username should be rejected.
-Status: NOT EXECUTED
+Status: PASS
+
+
+
+============================================================
+INCOLL-14 TEST EXECUTION SUMMARY
+============================================================
+
+TC14-01: PASS
+TC14-02: PASS
+TC14-03: PASS
+TC14-04: PASS
+TC14-05: FAIL - Jira bug created
+TC14-06: PASS
+TC14-07: PASS
+TC14-08: PASS
+TC14-09: PASS
+
+Total Tests: 9
+Passed: 8
+Failed: 1
