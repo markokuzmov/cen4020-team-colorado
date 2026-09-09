@@ -436,6 +436,11 @@ LOAD-USERS.
 *> ----------------------------------------------------------------
 OPEN-IO-FILES.
     OPEN INPUT INPUT-FILE
+    IF NOT INPUT-OK
+        DISPLAY "ERROR: InCollege-Input.txt could not be opened." UPON SYSERR
+        MOVE 1 TO RETURN-CODE
+        STOP RUN
+    END-IF
     OPEN OUTPUT OUTPUT-FILE.
 
 CLOSE-IO-FILES.
