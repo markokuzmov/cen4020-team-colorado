@@ -1,0 +1,58 @@
+INCOLL-15 - Account Persistence & System Capacity Limit Tests
+
+Executed against: feature/post_login @ c77e74a, compiled with
+`cobc -x -free -o incollege src/INCOLLEGE.cbl` (GnuCOBOL 4.0).
+Run1/Run2/Run3 -Input.txt / -Output.txt (this folder) are three separate
+process executions sharing the same data/users.dat, run in that order, to
+exercise capacity + persistence across a real restart.
+
+TC15-01 - Create 5 Accounts
+Steps (Run1): register bob01, carol02, dave03, erin04, frank05, each with a
+valid password.
+Expected: all 5 accounts created successfully.
+Actual: all 5 show "Account created successfully!" and are appended to
+data/users.dat.
+Status: PASS
+
+TC15-02 - Persistence Across Restart
+Steps (Run2, fresh process, same data/users.dat left over from Run1): log in
+as bob01 with the same password used to create the account in Run1.
+Expected: login succeeds without re-registering.
+Actual: "You have successfully logged in." / "Welcome, bob01!"
+Status: PASS
+
+TC15-03 - 6th Creation Attempt, Same Run
+Steps (Run1, continued): after the 5th account, attempt a 6th registration.
+Expected: exact message "All permitted accounts have been created, please
+come back later", no username/password prompt.
+Actual: message shown verbatim, program returns straight to the main menu
+with no prompt.
+Status: PASS
+
+TC15-04 - 6th Creation Attempt, Fresh Run
+Steps (Run3, fresh process, data/users.dat already holds the 5 accounts from
+Run1): first action of the run is "Create New Account".
+Expected: capacity message on the very first attempt, before any prompt.
+Actual: capacity message shown immediately.
+Status: PASS
+
+TC15-05 - First-Ever Run, No Persistence File Yet
+Steps: delete data/users.dat, then run the program.
+Expected: starts cleanly with 0 accounts, no error.
+Actual: OPEN INPUT on a missing/OPTIONAL USERS-FILE leaves WS-FILE-STATUS
+not "00", LOAD-USERS skips the read loop, WS-ACCOUNT-COUNT stays 0. No
+crash, first registration proceeds normally.
+Status: PASS
+
+TC15-06 - Duplicate Username Rejected
+Steps: register "zed01", then attempt to register "zed01" again in the same
+run with a different password.
+Expected: rejected as a duplicate, independent of the capacity check.
+Actual: "Username already exists. Please choose another." (CHECK-DUPLICATE),
+no account count consumed.
+Status: PASS
+
+Known issue: same console-vs-file mirroring bug documented in
+tests/INCOLL-13/test-cases.txt (INCOLL-18) applies to every prompt in these
+runs too, so file-level "identical to console" still fails even though every
+functional persistence/capacity/duplicate-username case above passes.

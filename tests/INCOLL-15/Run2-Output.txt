@@ -1,0 +1,28 @@
+
+========================================
+          Welcome to InCollege
+    LinkedIn for College Students
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice:
+2
+
+--- Log In ---
+Enter username:
+bob01
+Enter password:
+Secure1@
+You have successfully logged in.
+Welcome, bob01!
+
+--- Main Menu ---
+  1. Search for a Job
+  2. Find Someone You Know
+  3. Learn a New Skill
+  4. Logout
+Enter your choice:
+4
+Logging out...
