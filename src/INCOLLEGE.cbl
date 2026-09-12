@@ -39,7 +39,7 @@ FD  USERS-FILE.
     05  UR-PASSWORD      PIC X(12).
 
 FD  INPUT-FILE.
-01  INPUT-RECORD         PIC X(100).
+01  INPUT-RECORD         PIC X(200).
 
 WORKING-STORAGE SECTION.
 01  WS-FILE-STATUS       PIC XX VALUE SPACES.
@@ -66,6 +66,24 @@ WORKING-STORAGE SECTION.
 01  WS-EOF               PIC X     VALUE "N".
 01  WS-RUNNING           PIC X     VALUE "Y".
 
+*> ---- In-memory profile data for the authenticated user
+01  FIRST-NAME            PIC X(30) VALUE SPACES.
+01  LAST-NAME             PIC X(30) VALUE SPACES.
+01  UNIVERSITY            PIC X(50) VALUE SPACES.
+01  MAJOR                 PIC X(50) VALUE SPACES.
+01  GRAD-YEAR             PIC 9(4) VALUE ZERO.
+01  GRAD-YEAR-INPUT       PIC X(100) VALUE SPACES.
+01  ABOUT-ME              PIC X(200) VALUE SPACES.
+01  EXPERIENCE-TABLE.
+    05  EXPERIENCE-COUNT  PIC 9 VALUE 0.
+    05  EXPERIENCE-ENTRY OCCURS 1 TO 3 TIMES
+        DEPENDING ON EXPERIENCE-COUNT
+        INDEXED BY EXP-IDX.
+        10  EXP-TITLE     PIC X(50).
+        10  EXP-COMPANY   PIC X(50).
+        10  EXP-DATES     PIC X(30).
+        10  EXP-DESC      PIC X(100).
+
 *> ---- Core I/O engine buffer: every DISPLAY/ACCEPT in the program
 *> ---- is routed through this buffer so console and file output
 *> ---- always stay in lock-step (see WRITE-LINE / WRITE-PROMPT /
@@ -77,10 +95,10 @@ WORKING-STORAGE SECTION.
 *> ---- "Enter username: " prompts, or the centered banner lines)
 *> ---- have meaningful trailing spaces of their own that must not
 *> ---- be stripped.
-01  WS-LINE-BUFFER       PIC X(100) VALUE SPACES.
+01  WS-LINE-BUFFER       PIC X(200) VALUE SPACES.
 01  WS-LINE-LEN          PIC 999    VALUE ZERO.
 01  WS-STRING-PTR        PIC 999    VALUE ZERO.
-01  WS-PROMPT-BUFFER     PIC X(100) VALUE SPACES.
+01  WS-PROMPT-BUFFER     PIC X(200) VALUE SPACES.
 01  WS-PROMPT-LEN        PIC 999    VALUE ZERO.
 01  WS-OUTPUT-HANDLE     PIC 9(9) COMP-5 VALUE ZERO.
 01  WS-OUTPUT-MODE-BITS  PIC 9(9) COMP-5 VALUE 438.
@@ -93,7 +111,7 @@ WORKING-STORAGE SECTION.
 01  WS-OUTPUT-NEWLINE    PIC X      VALUE X"0A".
 01  WS-OUTPUT-LEN        PIC 999    VALUE ZERO.
 01  WS-WRITE-COUNT       PIC 999    COMP-5 VALUE ZERO.
-01  OUTPUT-RECORD        PIC X(100) VALUE SPACES.
+01  OUTPUT-RECORD        PIC X(300) VALUE SPACES.
 
 *> ---- Account persistence & capacity limit (5-account maximum)
 01  WS-MAX-ACCOUNTS      PIC 9     VALUE 5.
@@ -402,17 +420,20 @@ POST-LOGIN-MENU.
         MOVE "--- Main Menu ---" TO WS-LINE-BUFFER
         MOVE FUNCTION LENGTH("--- Main Menu ---") TO WS-LINE-LEN
         PERFORM WRITE-LINE
-        MOVE "  1. Search for a Job" TO WS-LINE-BUFFER
-        MOVE FUNCTION LENGTH("  1. Search for a Job") TO WS-LINE-LEN
+        MOVE "  1. Create/Edit My Profile" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  1. Create/Edit My Profile") TO WS-LINE-LEN
         PERFORM WRITE-LINE
-        MOVE "  2. Find Someone You Know" TO WS-LINE-BUFFER
-        MOVE FUNCTION LENGTH("  2. Find Someone You Know") TO WS-LINE-LEN
+        MOVE "  2. Search for a Job" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  2. Search for a Job") TO WS-LINE-LEN
         PERFORM WRITE-LINE
-        MOVE "  3. Learn a New Skill" TO WS-LINE-BUFFER
-        MOVE FUNCTION LENGTH("  3. Learn a New Skill") TO WS-LINE-LEN
+        MOVE "  3. Find Someone You Know" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  3. Find Someone You Know") TO WS-LINE-LEN
         PERFORM WRITE-LINE
-        MOVE "  4. Logout" TO WS-LINE-BUFFER
-        MOVE FUNCTION LENGTH("  4. Logout") TO WS-LINE-LEN
+        MOVE "  4. Learn a New Skill" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  4. Learn a New Skill") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  5. Logout" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  5. Logout") TO WS-LINE-LEN
         PERFORM WRITE-LINE
         MOVE "Enter your choice: " TO WS-LINE-BUFFER
         MOVE FUNCTION LENGTH("Enter your choice: ") TO WS-LINE-LEN
@@ -422,18 +443,15 @@ POST-LOGIN-MENU.
 
         EVALUATE WS-MENU-CHOICE
             WHEN "1"
-                MOVE "This feature is under construction." TO WS-LINE-BUFFER
-                MOVE FUNCTION LENGTH("This feature is under construction.")
-                    TO WS-LINE-LEN
-                PERFORM WRITE-LINE
+                PERFORM CREATE-EDIT-PROFILE
             WHEN "2"
                 MOVE "This feature is under construction." TO WS-LINE-BUFFER
                 MOVE FUNCTION LENGTH("This feature is under construction.")
                     TO WS-LINE-LEN
                 PERFORM WRITE-LINE
-            WHEN "3"
-                PERFORM LEARN-SKILL-MENU
             WHEN "4"
+                PERFORM LEARN-SKILL-MENU
+            WHEN "5"
                 MOVE "Logging out..." TO WS-LINE-BUFFER
                 MOVE FUNCTION LENGTH("Logging out...") TO WS-LINE-LEN
                 PERFORM WRITE-LINE
@@ -445,6 +463,90 @@ POST-LOGIN-MENU.
                 PERFORM WRITE-LINE
         END-EVALUATE
     END-PERFORM.
+
+*> ----------------------------------------------------------------
+*> CREATE-EDIT-PROFILE: capture and validate the authenticated user's
+*> profile. Values remain in working storage for the current run.
+*> ----------------------------------------------------------------
+CREATE-EDIT-PROFILE.
+    MOVE SPACES TO FIRST-NAME LAST-NAME UNIVERSITY MAJOR ABOUT-ME
+    MOVE ZERO TO GRAD-YEAR
+    PERFORM WRITE-BLANK-LINE
+    MOVE "Create/Edit Profile" TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH("Create/Edit Profile") TO WS-LINE-LEN
+    PERFORM WRITE-LINE
+
+    PERFORM UNTIL FUNCTION TRIM(FIRST-NAME) NOT = SPACES
+        MOVE "Enter First Name:" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("Enter First Name:") TO WS-LINE-LEN
+        PERFORM WRITE-PROMPT
+        PERFORM READ-INPUT-LINE
+        MOVE WS-LINE-BUFFER TO FIRST-NAME
+    END-PERFORM
+
+    PERFORM UNTIL FUNCTION TRIM(LAST-NAME) NOT = SPACES
+        MOVE "Enter Last Name:" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("Enter Last Name:") TO WS-LINE-LEN
+        PERFORM WRITE-PROMPT
+        PERFORM READ-INPUT-LINE
+        MOVE WS-LINE-BUFFER TO LAST-NAME
+    END-PERFORM
+
+    PERFORM UNTIL FUNCTION TRIM(UNIVERSITY) NOT = SPACES
+        MOVE "Enter University/College Attended:" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("Enter University/College Attended:")
+            TO WS-LINE-LEN
+        PERFORM WRITE-PROMPT
+        PERFORM READ-INPUT-LINE
+        MOVE WS-LINE-BUFFER TO UNIVERSITY
+    END-PERFORM
+
+    PERFORM UNTIL FUNCTION TRIM(MAJOR) NOT = SPACES
+        MOVE "Enter Major:" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("Enter Major:") TO WS-LINE-LEN
+        PERFORM WRITE-PROMPT
+        PERFORM READ-INPUT-LINE
+        MOVE WS-LINE-BUFFER TO MAJOR
+    END-PERFORM
+
+    MOVE "0" TO GRAD-YEAR-INPUT
+    PERFORM UNTIL GRAD-YEAR > 2025 AND GRAD-YEAR < 2034
+        MOVE "Enter Graduation Year (YYYY):" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("Enter Graduation Year (YYYY):")
+            TO WS-LINE-LEN
+        PERFORM WRITE-PROMPT
+        PERFORM READ-INPUT-LINE
+        MOVE SPACES TO GRAD-YEAR-INPUT
+        MOVE FUNCTION TRIM(WS-LINE-BUFFER) TO GRAD-YEAR-INPUT
+        IF GRAD-YEAR-INPUT(1:4) IS NUMERIC
+            AND GRAD-YEAR-INPUT(5:1) = SPACE
+            MOVE GRAD-YEAR-INPUT(1:4) TO GRAD-YEAR
+        ELSE
+            MOVE ZERO TO GRAD-YEAR
+        END-IF
+        IF GRAD-YEAR <= 2025 OR GRAD-YEAR >= 2034
+            MOVE "Invalid graduation year. Please enter a year between 2026 and 2033."
+                TO WS-LINE-BUFFER
+            MOVE FUNCTION LENGTH(
+                "Invalid graduation year. Please enter a year between 2026 and 2033.")
+                TO WS-LINE-LEN
+            PERFORM WRITE-LINE
+        END-IF
+    END-PERFORM
+
+    MOVE "Enter About Me (optional, max 200 chars, enter blank line to skip):"
+        TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH(
+        "Enter About Me (optional, max 200 chars, enter blank line to skip):")
+        TO WS-LINE-LEN
+    PERFORM WRITE-PROMPT
+    PERFORM READ-INPUT-LINE
+    MOVE SPACES TO ABOUT-ME
+    MOVE WS-LINE-BUFFER TO ABOUT-ME
+
+    MOVE "Profile saved successfully!" TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH("Profile saved successfully!") TO WS-LINE-LEN
+    PERFORM WRITE-LINE.
 
 *> ----------------------------------------------------------------
 *> LEARN-SKILL-MENU: list available skills until the user goes back
@@ -626,7 +728,7 @@ READ-INPUT-LINE.
     MOVE SPACES TO OUTPUT-RECORD
     MOVE WS-PROMPT-BUFFER(1:WS-PROMPT-LEN) TO OUTPUT-RECORD
     MOVE FUNCTION TRIM(WS-LINE-BUFFER, TRAILING) TO
-        OUTPUT-RECORD(WS-PROMPT-LEN + 1:100 - WS-PROMPT-LEN)
+        OUTPUT-RECORD(WS-PROMPT-LEN + 1:300 - WS-PROMPT-LEN)
     COMPUTE WS-OUTPUT-LEN = WS-PROMPT-LEN +
         FUNCTION LENGTH(FUNCTION TRIM(WS-LINE-BUFFER, TRAILING))
     PERFORM WRITE-OUTPUT-RECORD
