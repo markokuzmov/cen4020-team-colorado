@@ -1,0 +1,33 @@
+INCOLL-21 / INCOLL-22 - User Profile Management Tests
+
+TC21-01 - Create profile
+Precondition: Log in with a valid account that has no profile.
+Steps: Choose Profile, Create My Profile, and provide full name, university,
+major, and background.
+Expected: "Profile created successfully!" is shown and the profile is saved.
+
+TC21-02 - Prevent duplicate profile creation
+Precondition: The logged-in account already has a profile.
+Steps: Choose Profile, Create My Profile.
+Expected: The program directs the user to Edit My Profile instead of creating
+a second profile.
+
+TC21-03 - View a saved profile
+Precondition: A profile exists for username profileuser.
+Steps: Choose Profile, View a Profile, and enter profileuser.
+Expected: The saved name, university, major, and background are displayed.
+
+TC22-01 - Edit profile
+Precondition: Log in with an account that already has a profile.
+Steps: Choose Profile, Edit My Profile, and enter replacement values.
+Expected: "Profile updated successfully!" is shown and viewing the profile
+displays the replacement values.
+
+TC22-02 - Edit before creation
+Precondition: Log in with an account that does not have a profile.
+Steps: Choose Profile, Edit My Profile.
+Expected: The program directs the user to Create My Profile.
+
+TC22-03 - View a missing profile
+Steps: Choose Profile, View a Profile, and enter a username with no profile.
+Expected: "Profile not found." is shown.

@@ -1,0 +1,121 @@
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 1
+ 
+--- Create New Account ---
+Enter username: profileuser
+Enter password: Password1!
+Account created successfully!
+Welcome to InCollege, profileuser!
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 2
+ 
+--- Log In ---
+Enter username: profileuser
+Enter password: Password1!
+You have successfully logged in.
+Welcome, profileuser!
+ 
+--- Main Menu ---
+  1. Search for a Job
+  2. Find Someone You Know
+  3. Learn a New Skill
+  4. Logout
+  5. Profile
+Enter your choice: 5
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View a Profile
+  4. Go Back
+Enter your choice: 1
+Enter full name: Ada Lovelace
+Enter university: University of South Florida
+Enter major: Computer Science
+Tell us about yourself: Student developer interested in software engineering.
+Profile created successfully!
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View a Profile
+  4. Go Back
+Enter your choice: 3
+Enter username to view: profileuser
+--- Profile Details ---
+Name: Ada Lovelace
+University: University of South Florida
+Major: Computer Science
+About: Student developer interested in software engineering.
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View a Profile
+  4. Go Back
+Enter your choice: 4
+ 
+--- Main Menu ---
+  1. Search for a Job
+  2. Find Someone You Know
+  3. Learn a New Skill
+  4. Logout
+  5. Profile
+Enter your choice: 5
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View a Profile
+  4. Go Back
+Enter your choice: 2
+Enter full name: Ada Byron Lovelace
+Enter university: University of South Florida
+Enter major: Software Engineering
+Tell us about yourself: Updated profile background.
+Profile updated successfully!
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View a Profile
+  4. Go Back
+Enter your choice: 3
+Enter username to view: profileuser
+--- Profile Details ---
+Name: Ada Byron Lovelace
+University: University of South Florida
+Major: Software Engineering
+About: Updated profile background.
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View a Profile
+  4. Go Back
+Enter your choice: 4
+ 
+--- Main Menu ---
+  1. Search for a Job
+  2. Find Someone You Know
+  3. Learn a New Skill
+  4. Logout
+  5. Profile
+Enter your choice: 4
+Logging out...

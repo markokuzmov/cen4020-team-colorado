@@ -32,7 +32,7 @@ Requires **GnuCOBOL** (`cobc`).
 # macOS (Homebrew): brew install gnu-cobol
 
 # Compile
-cobc -x -o incollege src/INCOLLEGE.cbl
+cobc -free -x -o incollege src/INCOLLEGE.cbl
 ```
 
 ---
@@ -69,6 +69,7 @@ The program presents an interactive menu:
 | Scripted input | `InCollege-Input.txt` | Line-sequential; one menu choice/username/password per line, read in place of keyboard `ACCEPT`. Must exist before running. |
 | Output transcript | `InCollege-Output.txt` | Line-sequential; mirrors every line shown on the console, including each echoed input line, in the same order. Overwritten on each run. |
 | User account store | `data/users.dat` | Line-sequential flat file; auto-created on first registration, loaded into memory on startup. Each record is 32 bytes: 20-char username + 12-char password. |
+| User profile store | `data/profiles.dat` | Line-sequential flat file; auto-created when a logged-in user creates a profile. Stores the username, full name, university, major, and background. |
 
 > **Note:** `data/users.dat`, `InCollege-Input.txt`, and `InCollege-Output.txt` are all listed in `.gitignore` and never committed — they are run-time/local-test artifacts, not source.
 
