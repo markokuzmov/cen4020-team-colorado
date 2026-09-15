@@ -6,6 +6,7 @@ incollege.exe
 
 # Runtime data (generated at runtime — do not commit user data)
 data/users.dat
+data/profiles.dat
 
 # Scripted session I/O (input script + mirrored transcript are run
 # artifacts, not source — do not commit local test runs)
