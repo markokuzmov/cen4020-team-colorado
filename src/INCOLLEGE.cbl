@@ -74,6 +74,8 @@ WORKING-STORAGE SECTION.
 01  GRAD-YEAR             PIC 9(4) VALUE ZERO.
 01  GRAD-YEAR-INPUT       PIC X(100) VALUE SPACES.
 01  ABOUT-ME              PIC X(200) VALUE SPACES.
+01  WS-PROFILE-EXISTS     PIC X      VALUE "N".
+01  WS-EDIT-DONE          PIC X      VALUE "N".
 01  EXPERIENCE-TABLE.
     05  EXPERIENCE-COUNT  PIC 9 VALUE 0.
     05  EXPERIENCE-ENTRY OCCURS 1 TO 3 TIMES
@@ -443,7 +445,11 @@ POST-LOGIN-MENU.
 
         EVALUATE WS-MENU-CHOICE
             WHEN "1"
-                PERFORM CREATE-EDIT-PROFILE
+                IF WS-PROFILE-EXISTS = "Y"
+                    PERFORM EDIT-PROFILE
+                ELSE
+                    PERFORM CREATE-EDIT-PROFILE
+                END-IF
             WHEN "2"
                 MOVE "This feature is under construction." TO WS-LINE-BUFFER
                 MOVE FUNCTION LENGTH("This feature is under construction.")
@@ -546,6 +552,103 @@ CREATE-EDIT-PROFILE.
 
     MOVE "Profile saved successfully!" TO WS-LINE-BUFFER
     MOVE FUNCTION LENGTH("Profile saved successfully!") TO WS-LINE-LEN
+    PERFORM WRITE-LINE
+    MOVE "Y" TO WS-PROFILE-EXISTS.
+
+*> ----------------------------------------------------------------
+*> EDIT-PROFILE: loads the in-memory profile created by this logged-in
+*> user. A blank response keeps the existing value; a non-blank response
+*> replaces it. This preserves fields the user does not want to change.
+*> ----------------------------------------------------------------
+EDIT-PROFILE.
+    PERFORM WRITE-BLANK-LINE
+    MOVE "--- Edit My Profile ---" TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH("--- Edit My Profile ---") TO WS-LINE-LEN
+    PERFORM WRITE-LINE
+    MOVE "Press Enter to keep a displayed value." TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH("Press Enter to keep a displayed value.")
+        TO WS-LINE-LEN
+    PERFORM WRITE-LINE
+
+    MOVE "Enter First Name (blank keeps current):" TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH("Enter First Name (blank keeps current):")
+        TO WS-LINE-LEN
+    PERFORM WRITE-PROMPT
+    PERFORM READ-INPUT-LINE
+    IF FUNCTION TRIM(WS-LINE-BUFFER) NOT = SPACES
+        MOVE WS-LINE-BUFFER TO FIRST-NAME
+    END-IF
+
+    MOVE "Enter Last Name (blank keeps current):" TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH("Enter Last Name (blank keeps current):")
+        TO WS-LINE-LEN
+    PERFORM WRITE-PROMPT
+    PERFORM READ-INPUT-LINE
+    IF FUNCTION TRIM(WS-LINE-BUFFER) NOT = SPACES
+        MOVE WS-LINE-BUFFER TO LAST-NAME
+    END-IF
+
+    MOVE "Enter University (blank keeps current):" TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH("Enter University (blank keeps current):")
+        TO WS-LINE-LEN
+    PERFORM WRITE-PROMPT
+    PERFORM READ-INPUT-LINE
+    IF FUNCTION TRIM(WS-LINE-BUFFER) NOT = SPACES
+        MOVE WS-LINE-BUFFER TO UNIVERSITY
+    END-IF
+
+    MOVE "Enter Major (blank keeps current):" TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH("Enter Major (blank keeps current):")
+        TO WS-LINE-LEN
+    PERFORM WRITE-PROMPT
+    PERFORM READ-INPUT-LINE
+    IF FUNCTION TRIM(WS-LINE-BUFFER) NOT = SPACES
+        MOVE WS-LINE-BUFFER TO MAJOR
+    END-IF
+
+    MOVE "N" TO WS-EDIT-DONE
+    PERFORM UNTIL WS-EDIT-DONE = "Y"
+        MOVE "Enter Graduation Year (blank keeps current):"
+            TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH(
+            "Enter Graduation Year (blank keeps current):") TO WS-LINE-LEN
+        PERFORM WRITE-PROMPT
+        PERFORM READ-INPUT-LINE
+        IF FUNCTION TRIM(WS-LINE-BUFFER) = SPACES
+            MOVE "Y" TO WS-EDIT-DONE
+        ELSE
+            MOVE SPACES TO GRAD-YEAR-INPUT
+            MOVE FUNCTION TRIM(WS-LINE-BUFFER) TO GRAD-YEAR-INPUT
+            IF GRAD-YEAR-INPUT(1:4) IS NUMERIC
+                AND GRAD-YEAR-INPUT(5:1) = SPACE
+                MOVE GRAD-YEAR-INPUT(1:4) TO GRAD-YEAR
+            ELSE
+                MOVE ZERO TO GRAD-YEAR
+            END-IF
+            IF GRAD-YEAR > 2025 AND GRAD-YEAR < 2034
+                MOVE "Y" TO WS-EDIT-DONE
+            ELSE
+                MOVE "Invalid graduation year. Please enter a year between 2026 and 2033."
+                    TO WS-LINE-BUFFER
+                MOVE FUNCTION LENGTH(
+                    "Invalid graduation year. Please enter a year between 2026 and 2033.")
+                    TO WS-LINE-LEN
+                PERFORM WRITE-LINE
+            END-IF
+        END-IF
+    END-PERFORM
+
+    MOVE "Enter About Me (blank keeps current):" TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH("Enter About Me (blank keeps current):")
+        TO WS-LINE-LEN
+    PERFORM WRITE-PROMPT
+    PERFORM READ-INPUT-LINE
+    IF FUNCTION TRIM(WS-LINE-BUFFER) NOT = SPACES
+        MOVE WS-LINE-BUFFER TO ABOUT-ME
+    END-IF
+
+    MOVE "Profile updated successfully!" TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH("Profile updated successfully!") TO WS-LINE-LEN
     PERFORM WRITE-LINE.
 
 *> ----------------------------------------------------------------
