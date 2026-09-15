@@ -1,0 +1,19 @@
+INCOLL-34 / INCOLL-35 - Profile Editing Tests
+
+TC34-01 - Edit selected fields
+Precondition: A logged-in user has created a profile in the current session.
+Steps: Select Create/Edit My Profile again, leave first name, last name,
+university, and graduation year blank; enter a new major and About Me text.
+Expected: Blank inputs keep their current values and the changed fields are
+saved. "Profile updated successfully!" is displayed.
+
+TC34-02 - Invalid graduation year while editing
+Precondition: A logged-in user has created a profile.
+Steps: Select Create/Edit My Profile and enter an invalid graduation year.
+Expected: The error message is displayed and the user is prompted again until
+they enter a valid year or press Enter to keep the current year.
+
+TC35-01 - Edit-flow regression session
+Input: TC34-01-input.txt
+Expected: The transcript contains profile creation, an edit prompt for every
+profile field, and the successful-update message.
