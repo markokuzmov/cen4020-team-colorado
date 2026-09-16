@@ -36,16 +36,25 @@ Expected:
 The previously created profile should persist and be displayed after restarting the application.
 
 Actual:
-The program displays "Profile created successfully!" during the first run, but data/profiles.dat is not created. After restarting and logging in, View My Profile cannot find the profile.
+The profile was successfully saved and displayed after restarting the application.
 
-Status: FAIL
-Related Bug: INCOLL-52
+Status: PASS
+
+Related Bug:
+INCOLL-52 - Fixed and verified
 
 INCOLL-37 Test Summary
 
-TC37-01 PASS
-TC37-02 PASS
-TC37-03 PASS
-TC37-04 PASS
-TC37-05 PASS on bugfix branch
-Waiting for merge into develop
+Total Test Cases: 5
+Passed: 5
+Failed: 0
+
+Result: PASS
+
+TC37-01: PASS
+TC37-02: PASS
+TC37-03: PASS
+TC37-04: PASS
+TC37-05: PASS
+
+INCOLL-52 was fixed and successfully verified on develop.

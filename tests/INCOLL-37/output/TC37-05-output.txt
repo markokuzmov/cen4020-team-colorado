@@ -30,7 +30,12 @@ Enter your choice: 1
   4. View a Profile
   5. Go Back
 Enter your choice: 3
-Profile not found.
+--- Profile Details ---
+Name: Varshith Manne
+University: University of South Florida
+Major: Computer Science
+Graduation Y 2028
+About: Testing profile persistence.
  
 --- Profile ---
   1. Create My Profile
