@@ -39,6 +39,7 @@ Actual:
 The program displays "Profile created successfully!" during the first run, but data/profiles.dat is not created. After restarting and logging in, View My Profile cannot find the profile.
 
 Status: FAIL
+Related Bug: INCOLL-52
 
 INCOLL-37 Test Summary
 
@@ -56,3 +57,4 @@ Profile viewing was tested for:
 - Viewing a saved profile after restarting the application
 
 TC37-05 failed because the created profile did not persist across program restarts.
+Bug reported in Jira: INCOLL-52.
