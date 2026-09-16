@@ -1,0 +1,83 @@
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 1
+ 
+--- Create New Account ---
+Enter username: viewuser
+Enter password: Hello@123
+Account created successfully!
+Welcome to InCollege, viewuser!
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 2
+ 
+--- Log In ---
+Enter username: viewuser
+Enter password: Hello@123
+You have successfully logged in.
+Welcome, viewuser!
+ 
+--- Main Menu ---
+  1. Search for a Job
+  2. Find Someone You Know
+  3. Learn a New Skill
+  4. Logout
+  5. Profile
+Enter your choice: 5
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View My Profile
+  4. View a Profile
+  5. Go Back
+Enter your choice: 1
+Enter full name: Varshith Manne
+Enter university: University of South Florida
+Enter major: Computer Science
+Tell us about yourself: Computer Science student interested in software development.
+Profile created successfully!
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View My Profile
+  4. View a Profile
+  5. Go Back
+Enter your choice: 3
+--- Profile Details ---
+Name: Varshith Manne
+University: University of South Florida
+Major: Computer Science
+About: Computer Science student interested in software development.
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View My Profile
+  4. View a Profile
+  5. Go Back
+Enter your choice: 5
+ 
+--- Main Menu ---
+  1. Search for a Job
+  2. Find Someone You Know
+  3. Learn a New Skill
+  4. Logout
+  5. Profile
+Enter your choice: 4
+Logging out...
