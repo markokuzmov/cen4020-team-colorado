@@ -1,0 +1,61 @@
+INCOLL-33 - Profile Creation Test Cases
+
+TC33-01 - Create profile with all valid information
+Expected: Profile is saved successfully.
+Status: PASS
+
+TC33-02 - Leave First Name blank, then enter a valid First Name
+Expected: Program prompts again until a non-blank First Name is entered.
+Status: PASS
+
+TC33-03 - Leave Last Name blank, then enter a valid Last Name
+Expected: Program prompts again until a non-blank Last Name is entered.
+Status: PASS
+TC33-04 - Leave University blank, then enter a valid University
+Expected: Program prompts again until a non-blank University is entered.
+Status: PASS
+
+TC33-05 - Leave Major blank, then enter a valid Major
+Expected: Program prompts again until a non-blank Major is entered.
+Status: PASS
+
+TC33-06 - Graduation year lower boundary: 2026
+Expected: 2026 is accepted and profile is saved successfully.
+Status: PASS
+
+TC33-07 - Graduation year upper boundary: 2033
+Expected: 2033 is accepted and profile is saved successfully.
+Status: PASS
+
+TC33-08 - Graduation year below valid range: 2025
+Expected: 2025 is rejected, error message is displayed, and program prompts again.
+Status: PASS
+
+TC33-09 - Graduation year above valid range: 2034
+Expected: 2034 is rejected, error message is displayed, and program prompts again.
+Status: PASS
+
+TC33-10 - Non-numeric graduation year
+Expected: Non-numeric input is rejected, error message is displayed, and program prompts again.
+Status: PASS
+
+TC33-11 - Leave optional About Me blank
+Expected: Blank About Me is accepted and profile is saved successfully.
+Status: PASS
+
+TC33-12 - Enter exactly 200 characters in About Me
+Expected: A 200-character About Me is accepted and the profile is saved successfully.
+Status: PASS
+
+
+INCOLL-33 Test Summary
+
+Total Test Cases: 12
+Passed: 12
+Failed: 0
+
+Result: PASS
+
+Profile creation was tested with valid inputs, blank required fields,
+graduation-year boundary and invalid values, optional About Me, and the
+200-character About Me boundary.
