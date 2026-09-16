@@ -32,12 +32,12 @@ You have successfully logged in.
 Welcome, viewuser!
  
 --- Main Menu ---
-  1. Search for a Job
-  2. Find Someone You Know
-  3. Learn a New Skill
-  4. Logout
-  5. Profile
-Enter your choice: 5
+  1. Create/Edit My Profile
+  2. Search for a Job
+  3. Find Someone You Know
+  4. Learn a New Skill
+  5. Logout
+Enter your choice: 1
  
 --- Profile ---
   1. Create My Profile
@@ -57,10 +57,10 @@ Profile not found.
 Enter your choice: 5
  
 --- Main Menu ---
-  1. Search for a Job
-  2. Find Someone You Know
-  3. Learn a New Skill
-  4. Logout
-  5. Profile
-Enter your choice: 4
+  1. Create/Edit My Profile
+  2. Search for a Job
+  3. Find Someone You Know
+  4. Learn a New Skill
+  5. Logout
+Enter your choice: 5
 Logging out...

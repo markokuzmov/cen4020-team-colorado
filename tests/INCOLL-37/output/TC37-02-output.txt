@@ -32,12 +32,12 @@ You have successfully logged in.
 Welcome, viewuser!
  
 --- Main Menu ---
-  1. Search for a Job
-  2. Find Someone You Know
-  3. Learn a New Skill
-  4. Logout
-  5. Profile
-Enter your choice: 5
+  1. Create/Edit My Profile
+  2. Search for a Job
+  3. Find Someone You Know
+  4. Learn a New Skill
+  5. Logout
+Enter your choice: 1
  
 --- Profile ---
   1. Create My Profile
@@ -46,10 +46,13 @@ Enter your choice: 5
   4. View a Profile
   5. Go Back
 Enter your choice: 1
-Enter full name: Varshith Manne
-Enter university: University of South Florida
-Enter major: Computer Science
-Tell us about yourself: Computer Science student interested in software development.
+Create/Edit Profile
+Enter First Name:Varshith
+Enter Last Name:Manne
+Enter University/College Attended:University of South Florida
+Enter Major:Computer Science
+Enter Graduation Year (YYYY):2028
+Enter About Me (optional, max 200 chars, enter blank line to skip):Computer Science student interested in software development.
 Profile created successfully!
  
 --- Profile ---
@@ -63,6 +66,7 @@ Enter your choice: 3
 Name: Varshith Manne
 University: University of South Florida
 Major: Computer Science
+Graduation Y 2028
 About: Computer Science student interested in software development.
  
 --- Profile ---
@@ -74,10 +78,10 @@ About: Computer Science student interested in software development.
 Enter your choice: 5
  
 --- Main Menu ---
-  1. Search for a Job
-  2. Find Someone You Know
-  3. Learn a New Skill
-  4. Logout
-  5. Profile
-Enter your choice: 4
+  1. Create/Edit My Profile
+  2. Search for a Job
+  3. Find Someone You Know
+  4. Learn a New Skill
+  5. Logout
+Enter your choice: 5
 Logging out...
