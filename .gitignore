@@ -13,6 +13,11 @@ data/profiles.dat
 InCollege-Input.txt
 InCollege-Output.txt
 
+# Scripted session I/O (input script + mirrored transcript are run
+# artifacts, not source — do not commit local test runs)
+InCollege-Input.txt
+InCollege-Output.txt
+
 # macOS
 .DS_Store
 

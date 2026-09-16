@@ -62,7 +62,6 @@ WORKING-STORAGE SECTION.
 
 01  WS-PROFILE-FILE-STATUS PIC XX VALUE SPACES.
     88  PROFILE-FILE-OK  VALUE "00".
-
 01  WS-INPUT-STATUS      PIC XX VALUE SPACES.
     88  INPUT-OK         VALUE "00".
 
@@ -101,7 +100,6 @@ WORKING-STORAGE SECTION.
         10  EXP-COMPANY   PIC X(50).
         10  EXP-DATES     PIC X(30).
         10  EXP-DESC      PIC X(100).
-
 *> ---- Core I/O engine buffer: every DISPLAY/ACCEPT in the program
 *> ---- is routed through this buffer so console and file output
 *> ---- always stay in lock-step (see WRITE-LINE / WRITE-PROMPT /
@@ -162,7 +160,6 @@ WORKING-STORAGE SECTION.
         10  WS-TBL-MAJOR            PIC X(50).
         10  WS-TBL-GRAD-YEAR        PIC 9(4).
         10  WS-TBL-ABOUT            PIC X(200).
-
 PROCEDURE DIVISION.
 
 *> ----------------------------------------------------------------
