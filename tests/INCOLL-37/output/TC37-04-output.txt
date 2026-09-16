@@ -1,0 +1,103 @@
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 1
+ 
+--- Create New Account ---
+Enter username: viewuser
+Enter password: Hello@123
+Account created successfully!
+Welcome to InCollege, viewuser!
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 2
+ 
+--- Log In ---
+Enter username: viewuser
+Enter password: Hello@123
+You have successfully logged in.
+Welcome, viewuser!
+ 
+--- Main Menu ---
+  1. Create/Edit My Profile
+  2. Search for a Job
+  3. Find Someone You Know
+  4. Learn a New Skill
+  5. Logout
+Enter your choice: 1
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View My Profile
+  4. View a Profile
+  5. Go Back
+Enter your choice: 1
+Create/Edit Profile
+Enter First Name:Varshith
+Enter Last Name:Manne
+Enter University/College Attended:University of South Florida
+Enter Major:Computer Science
+Enter Graduation Year (YYYY):2028
+Enter About Me (optional, max 200 chars, enter blank line to skip):Original profile information.
+Profile created successfully!
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View My Profile
+  4. View a Profile
+  5. Go Back
+Enter your choice: 2
+Create/Edit Profile
+Enter First Name:Varshith Krishna
+Enter Last Name:Manne
+Enter University/College Attended:USF
+Enter Major:Software Engineering
+Enter Graduation Year (YYYY):2029
+Enter About Me (optional, max 200 chars, enter blank line to skip):Updated profile information.
+Profile updated successfully!
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View My Profile
+  4. View a Profile
+  5. Go Back
+Enter your choice: 3
+--- Profile Details ---
+Name: Varshith Krishna Manne
+University: USF
+Major: Software Engineering
+Graduation Y 2029
+About: Updated profile information.
+ 
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View My Profile
+  4. View a Profile
+  5. Go Back
+Enter your choice: 5
+ 
+--- Main Menu ---
+  1. Create/Edit My Profile
+  2. Search for a Job
+  3. Find Someone You Know
+  4. Learn a New Skill
+  5. Logout
+Enter your choice: 5
+Logging out...

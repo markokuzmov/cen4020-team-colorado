@@ -1,0 +1,60 @@
+INCOLL-37 - Profile Viewing Test Cases
+
+TC37-01 - View My Profile when no profile exists
+Expected: Program displays "Profile not found." and remains in the Profile menu.
+Status: PASS
+
+TC37-02 - Create a profile and view it
+Expected: View My Profile displays the saved Name, University, Major, and About information correctly.
+Status: PASS
+
+TC37-03 - View a profile with blank About information
+Expected: Profile displays successfully with the About field blank.
+Status: PASS
+
+TC37-04 - Edit an existing profile and then view it
+Expected: View My Profile displays the updated profile information.
+Status: PASS
+
+INCOLL-37 Test Summary
+
+Total Test Cases: 4
+Passed: 4
+Failed: 0
+
+Result: PASS
+
+Profile viewing was tested for:
+- Viewing when no profile exists
+- Viewing a newly created profile
+- Viewing a profile with a blank About field
+- Viewing updated information after editing a profile
+
+TC37-05 - View profile after restarting the program
+
+Expected:
+The previously created profile should persist and be displayed after restarting the application.
+
+Actual:
+The profile was successfully saved and displayed after restarting the application.
+
+Status: PASS
+
+Related Bug:
+INCOLL-52 - Fixed and verified
+
+INCOLL-37 Test Summary
+
+Total Test Cases: 5
+Passed: 5
+Failed: 0
+
+Result: PASS
+
+TC37-01: PASS
+TC37-02: PASS
+TC37-03: PASS
+TC37-04: PASS
+TC37-05: PASS
+
+INCOLL-52 was fixed and successfully verified on develop.
