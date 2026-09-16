@@ -69,8 +69,9 @@ The program presents an interactive menu:
 | Scripted input | `InCollege-Input.txt` | Line-sequential; one menu choice/username/password per line, read in place of keyboard `ACCEPT`. Must exist before running. |
 | Output transcript | `InCollege-Output.txt` | Line-sequential; mirrors every line shown on the console, including each echoed input line, in the same order. Overwritten on each run. |
 | User account store | `data/users.dat` | Line-sequential flat file; auto-created on first registration, loaded into memory on startup. Each record is 32 bytes: 20-char username + 12-char password. |
+| Profile store | `data/profiles.dat` | Line-sequential flat file; one record per user who has created a profile, keyed by username, loaded into memory on startup. Rewritten in full on every Create/Edit. |
 
-> **Note:** `data/users.dat`, `InCollege-Input.txt`, and `InCollege-Output.txt` are all listed in `.gitignore` and never committed — they are run-time/local-test artifacts, not source.
+> **Note:** `data/users.dat`, `data/profiles.dat`, `InCollege-Input.txt`, and `InCollege-Output.txt` are all listed in `.gitignore` and never committed — they are run-time/local-test artifacts, not source.
 
 ---
 
@@ -96,6 +97,31 @@ without prompting for a username or password.
 | Uppercase | At least one letter A–Z |
 | Digit | At least one character 0–9 |
 | Special | At least one of `!@#$%^&*()-_+=` |
+
+---
+
+## Profile
+
+From the post-login **Main Menu**, option **5. Profile** opens:
+
+```
+--- Profile ---
+  1. Create My Profile
+  2. Edit My Profile
+  3. View My Profile
+  4. View a Profile
+  5. Go Back
+```
+
+- **Create/Edit My Profile** capture full name, university, major, and a
+  short "about" background, and save them to `data/profiles.dat` -
+  permanently, keyed by username, so a returning user sees everything they
+  saved on their next login without re-entering it. Create is blocked (with
+  a redirect message) if a profile already exists; Edit is blocked (with a
+  redirect message) if one doesn't exist yet.
+- **View My Profile** and **View a Profile** render through the same
+  routine, so a user's own profile is guaranteed to display identically to
+  how anyone else looking it up by username would see it.
 
 ---
 

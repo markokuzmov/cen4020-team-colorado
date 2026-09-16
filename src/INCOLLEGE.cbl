@@ -25,6 +25,12 @@ FILE-CONTROL.
         ACCESS MODE IS SEQUENTIAL
         FILE STATUS IS WS-FILE-STATUS.
 
+    SELECT OPTIONAL PROFILES-FILE
+        ASSIGN TO "data/profiles.dat"
+        ORGANIZATION IS LINE SEQUENTIAL
+        ACCESS MODE IS SEQUENTIAL
+        FILE STATUS IS WS-PROFILE-FILE-STATUS.
+
     SELECT INPUT-FILE
         ASSIGN TO "InCollege-Input.txt"
         ORGANIZATION IS LINE SEQUENTIAL
@@ -38,12 +44,24 @@ FD  USERS-FILE.
     05  UR-USERNAME      PIC X(20).
     05  UR-PASSWORD      PIC X(12).
 
+FD  PROFILES-FILE.
+01  PROFILE-RECORD.
+    05  PR-USERNAME      PIC X(20).
+    05  PR-FULL-NAME     PIC X(60).
+    05  PR-UNIVERSITY    PIC X(50).
+    05  PR-MAJOR         PIC X(50).
+    05  PR-GRAD-YEAR     PIC 9(4).
+    05  PR-ABOUT         PIC X(200).
+
 FD  INPUT-FILE.
 01  INPUT-RECORD         PIC X(200).
 
 WORKING-STORAGE SECTION.
 01  WS-FILE-STATUS       PIC XX VALUE SPACES.
     88  FILE-OK          VALUE "00".
+
+01  WS-PROFILE-FILE-STATUS PIC XX VALUE SPACES.
+    88  PROFILE-FILE-OK  VALUE "00".
 
 01  WS-INPUT-STATUS      PIC XX VALUE SPACES.
     88  INPUT-OK         VALUE "00".
@@ -66,7 +84,7 @@ WORKING-STORAGE SECTION.
 01  WS-EOF               PIC X     VALUE "N".
 01  WS-RUNNING           PIC X     VALUE "Y".
 
-*> ---- In-memory profile data for the authenticated user
+*> ---- In-memory profile capture fields
 01  FIRST-NAME            PIC X(30) VALUE SPACES.
 01  LAST-NAME             PIC X(30) VALUE SPACES.
 01  UNIVERSITY            PIC X(50) VALUE SPACES.
@@ -74,8 +92,6 @@ WORKING-STORAGE SECTION.
 01  GRAD-YEAR             PIC 9(4) VALUE ZERO.
 01  GRAD-YEAR-INPUT       PIC X(100) VALUE SPACES.
 01  ABOUT-ME              PIC X(200) VALUE SPACES.
-01  WS-PROFILE-EXISTS     PIC X      VALUE "N".
-01  WS-EDIT-DONE          PIC X      VALUE "N".
 01  EXPERIENCE-TABLE.
     05  EXPERIENCE-COUNT  PIC 9 VALUE 0.
     05  EXPERIENCE-ENTRY OCCURS 1 TO 3 TIMES
@@ -97,10 +113,10 @@ WORKING-STORAGE SECTION.
 *> ---- "Enter username: " prompts, or the centered banner lines)
 *> ---- have meaningful trailing spaces of their own that must not
 *> ---- be stripped.
-01  WS-LINE-BUFFER       PIC X(200) VALUE SPACES.
+01  WS-LINE-BUFFER       PIC X(300) VALUE SPACES.
 01  WS-LINE-LEN          PIC 999    VALUE ZERO.
 01  WS-STRING-PTR        PIC 999    VALUE ZERO.
-01  WS-PROMPT-BUFFER     PIC X(200) VALUE SPACES.
+01  WS-PROMPT-BUFFER     PIC X(300) VALUE SPACES.
 01  WS-PROMPT-LEN        PIC 999    VALUE ZERO.
 01  WS-OUTPUT-HANDLE     PIC 9(9) COMP-5 VALUE ZERO.
 01  WS-OUTPUT-MODE-BITS  PIC 9(9) COMP-5 VALUE 438.
@@ -113,7 +129,7 @@ WORKING-STORAGE SECTION.
 01  WS-OUTPUT-NEWLINE    PIC X      VALUE X"0A".
 01  WS-OUTPUT-LEN        PIC 999    VALUE ZERO.
 01  WS-WRITE-COUNT       PIC 999    COMP-5 VALUE ZERO.
-01  OUTPUT-RECORD        PIC X(300) VALUE SPACES.
+01  OUTPUT-RECORD        PIC X(400) VALUE SPACES.
 
 *> ---- Account persistence & capacity limit (5-account maximum)
 01  WS-MAX-ACCOUNTS      PIC 9     VALUE 5.
@@ -124,6 +140,29 @@ WORKING-STORAGE SECTION.
         10  WS-TBL-USERNAME  PIC X(20).
         10  WS-TBL-PASSWORD  PIC X(12).
 
+*> ---- Profile persistence: profiles are keyed by username and kept
+*> ---- in an in-memory table (mirrors the account table pattern
+*> ---- above), loaded from data/profiles.dat at startup and rewritten
+*> ---- in full whenever a profile is created or edited.
+01  WS-PROFILE-FOUND     PIC X     VALUE "N".
+01  WS-PROFILE-COUNT     PIC 9     VALUE ZERO.
+01  WS-PROFILE-IDX       PIC 9     VALUE ZERO.
+01  WS-PROFILE-USERNAME  PIC X(20) VALUE SPACES.
+01  WS-FULL-NAME         PIC X(60) VALUE SPACES.
+01  WS-UNIVERSITY        PIC X(50) VALUE SPACES.
+01  WS-MAJOR             PIC X(50) VALUE SPACES.
+01  WS-ABOUT             PIC X(200) VALUE SPACES.
+01  WS-FIELD-LABEL       PIC X(12) VALUE SPACES.
+01  WS-FIELD-VALUE       PIC X(200) VALUE SPACES.
+01  WS-PROFILE-TABLE.
+    05  WS-PROFILE-ENTRY OCCURS 5 TIMES.
+        10  WS-TBL-PROFILE-USERNAME PIC X(20).
+        10  WS-TBL-FULL-NAME        PIC X(60).
+        10  WS-TBL-UNIVERSITY       PIC X(50).
+        10  WS-TBL-MAJOR            PIC X(50).
+        10  WS-TBL-GRAD-YEAR        PIC 9(4).
+        10  WS-TBL-ABOUT            PIC X(200).
+
 PROCEDURE DIVISION.
 
 *> ----------------------------------------------------------------
@@ -133,6 +172,7 @@ PROCEDURE DIVISION.
 000-MAIN-CONTROL.
     PERFORM OPEN-IO-FILES
     PERFORM LOAD-USERS
+    PERFORM LOAD-PROFILES
     PERFORM MAIN-MENU
     PERFORM CLOSE-IO-FILES
     STOP RUN.
@@ -445,11 +485,7 @@ POST-LOGIN-MENU.
 
         EVALUATE WS-MENU-CHOICE
             WHEN "1"
-                IF WS-PROFILE-EXISTS = "Y"
-                    PERFORM EDIT-PROFILE
-                ELSE
-                    PERFORM CREATE-EDIT-PROFILE
-                END-IF
+                PERFORM PROFILE-MENU
             WHEN "2"
                 MOVE "This feature is under construction." TO WS-LINE-BUFFER
                 MOVE FUNCTION LENGTH("This feature is under construction.")
@@ -471,17 +507,102 @@ POST-LOGIN-MENU.
     END-PERFORM.
 
 *> ----------------------------------------------------------------
-*> CREATE-EDIT-PROFILE: capture and validate the authenticated user's
-*> profile. Values remain in working storage for the current run.
+*> PROFILE-MENU: logged-in users can create, edit, and view profiles.
+*> Profiles are identified by username and saved in
+*> data/profiles.dat, so the info a user saves here is exactly what
+*> they (and everyone else) will see on every later login/view -
+*> nothing has to be re-entered once it has been saved once.
 *> ----------------------------------------------------------------
-CREATE-EDIT-PROFILE.
+PROFILE-MENU.
+    MOVE SPACE TO WS-MENU-CHOICE
+    PERFORM UNTIL WS-MENU-CHOICE = "5"
+        PERFORM WRITE-BLANK-LINE
+        MOVE "--- Profile ---" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("--- Profile ---") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  1. Create My Profile" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  1. Create My Profile") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  2. Edit My Profile" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  2. Edit My Profile") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  3. View My Profile" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  3. View My Profile") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  4. View a Profile" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  4. View a Profile") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "  5. Go Back" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("  5. Go Back") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "Enter your choice: " TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("Enter your choice: ") TO WS-LINE-LEN
+        PERFORM WRITE-PROMPT
+        PERFORM READ-INPUT-LINE
+        MOVE WS-LINE-BUFFER(1:1) TO WS-MENU-CHOICE
+
+        EVALUATE WS-MENU-CHOICE
+            WHEN "1"
+                PERFORM LOAD-CURRENT-PROFILE
+                IF WS-PROFILE-FOUND = "Y"
+                    MOVE "A profile already exists. Choose Edit My Profile."
+                        TO WS-LINE-BUFFER
+                    MOVE FUNCTION LENGTH(
+                        "A profile already exists. Choose Edit My Profile.")
+                        TO WS-LINE-LEN
+                    PERFORM WRITE-LINE
+                ELSE
+                    PERFORM CAPTURE-PROFILE
+                    PERFORM ADD-CURRENT-PROFILE
+                    PERFORM SAVE-PROFILES
+                    MOVE "Profile created successfully!" TO WS-LINE-BUFFER
+                    MOVE FUNCTION LENGTH("Profile created successfully!")
+                        TO WS-LINE-LEN
+                    PERFORM WRITE-LINE
+                END-IF
+            WHEN "2"
+                PERFORM LOAD-CURRENT-PROFILE
+                IF WS-PROFILE-FOUND = "N"
+                    MOVE "No profile exists yet. Choose Create My Profile."
+                        TO WS-LINE-BUFFER
+                    MOVE FUNCTION LENGTH(
+                        "No profile exists yet. Choose Create My Profile.")
+                        TO WS-LINE-LEN
+                    PERFORM WRITE-LINE
+                ELSE
+                    PERFORM CAPTURE-PROFILE
+                    PERFORM UPDATE-CURRENT-PROFILE
+                    PERFORM SAVE-PROFILES
+                    MOVE "Profile updated successfully!" TO WS-LINE-BUFFER
+                    MOVE FUNCTION LENGTH("Profile updated successfully!")
+                        TO WS-LINE-LEN
+                    PERFORM WRITE-LINE
+                END-IF
+            WHEN "3"
+                PERFORM VIEW-MY-PROFILE
+            WHEN "4"
+                PERFORM VIEW-PROFILE
+            WHEN "5"
+                CONTINUE
+            WHEN OTHER
+                MOVE "Invalid choice. Please try again." TO WS-LINE-BUFFER
+                MOVE FUNCTION LENGTH("Invalid choice. Please try again.")
+                    TO WS-LINE-LEN
+                PERFORM WRITE-LINE
+        END-EVALUATE
+    END-PERFORM.
+
+*> ----------------------------------------------------------------
+*> CAPTURE-PROFILE: prompt for the four profile fields into the
+*> WS-FULL-NAME/WS-UNIVERSITY/WS-MAJOR/WS-ABOUT working fields,
+*> shared by both Create and Edit
+*> ----------------------------------------------------------------
+CAPTURE-PROFILE.
     MOVE SPACES TO FIRST-NAME LAST-NAME UNIVERSITY MAJOR ABOUT-ME
     MOVE ZERO TO GRAD-YEAR
-    PERFORM WRITE-BLANK-LINE
     MOVE "Create/Edit Profile" TO WS-LINE-BUFFER
     MOVE FUNCTION LENGTH("Create/Edit Profile") TO WS-LINE-LEN
     PERFORM WRITE-LINE
-
     PERFORM UNTIL FUNCTION TRIM(FIRST-NAME) NOT = SPACES
         MOVE "Enter First Name:" TO WS-LINE-BUFFER
         MOVE FUNCTION LENGTH("Enter First Name:") TO WS-LINE-LEN
@@ -489,7 +610,6 @@ CREATE-EDIT-PROFILE.
         PERFORM READ-INPUT-LINE
         MOVE WS-LINE-BUFFER TO FIRST-NAME
     END-PERFORM
-
     PERFORM UNTIL FUNCTION TRIM(LAST-NAME) NOT = SPACES
         MOVE "Enter Last Name:" TO WS-LINE-BUFFER
         MOVE FUNCTION LENGTH("Enter Last Name:") TO WS-LINE-LEN
@@ -497,7 +617,6 @@ CREATE-EDIT-PROFILE.
         PERFORM READ-INPUT-LINE
         MOVE WS-LINE-BUFFER TO LAST-NAME
     END-PERFORM
-
     PERFORM UNTIL FUNCTION TRIM(UNIVERSITY) NOT = SPACES
         MOVE "Enter University/College Attended:" TO WS-LINE-BUFFER
         MOVE FUNCTION LENGTH("Enter University/College Attended:")
@@ -506,7 +625,6 @@ CREATE-EDIT-PROFILE.
         PERFORM READ-INPUT-LINE
         MOVE WS-LINE-BUFFER TO UNIVERSITY
     END-PERFORM
-
     PERFORM UNTIL FUNCTION TRIM(MAJOR) NOT = SPACES
         MOVE "Enter Major:" TO WS-LINE-BUFFER
         MOVE FUNCTION LENGTH("Enter Major:") TO WS-LINE-LEN
@@ -514,8 +632,6 @@ CREATE-EDIT-PROFILE.
         PERFORM READ-INPUT-LINE
         MOVE WS-LINE-BUFFER TO MAJOR
     END-PERFORM
-
-    MOVE "0" TO GRAD-YEAR-INPUT
     PERFORM UNTIL GRAD-YEAR > 2025 AND GRAD-YEAR < 2034
         MOVE "Enter Graduation Year (YYYY):" TO WS-LINE-BUFFER
         MOVE FUNCTION LENGTH("Enter Graduation Year (YYYY):")
@@ -539,7 +655,6 @@ CREATE-EDIT-PROFILE.
             PERFORM WRITE-LINE
         END-IF
     END-PERFORM
-
     MOVE "Enter About Me (optional, max 200 chars, enter blank line to skip):"
         TO WS-LINE-BUFFER
     MOVE FUNCTION LENGTH(
@@ -547,109 +662,181 @@ CREATE-EDIT-PROFILE.
         TO WS-LINE-LEN
     PERFORM WRITE-PROMPT
     PERFORM READ-INPUT-LINE
-    MOVE SPACES TO ABOUT-ME
     MOVE WS-LINE-BUFFER TO ABOUT-ME
-
-    MOVE "Profile saved successfully!" TO WS-LINE-BUFFER
-    MOVE FUNCTION LENGTH("Profile saved successfully!") TO WS-LINE-LEN
-    PERFORM WRITE-LINE
-    MOVE "Y" TO WS-PROFILE-EXISTS.
+    MOVE SPACES TO WS-FULL-NAME
+    STRING FUNCTION TRIM(FIRST-NAME) DELIMITED BY SIZE
+        " " DELIMITED BY SIZE
+        FUNCTION TRIM(LAST-NAME) DELIMITED BY SIZE
+        INTO WS-FULL-NAME
+    END-STRING
+    MOVE UNIVERSITY TO WS-UNIVERSITY
+    MOVE MAJOR TO WS-MAJOR
+    MOVE ABOUT-ME TO WS-ABOUT.
 
 *> ----------------------------------------------------------------
-*> EDIT-PROFILE: loads the in-memory profile created by this logged-in
-*> user. A blank response keeps the existing value; a non-blank response
-*> replaces it. This preserves fields the user does not want to change.
+*> ADD-CURRENT-PROFILE / UPDATE-CURRENT-PROFILE: commit the fields
+*> just captured into the in-memory profile table (new row vs.
+*> overwrite the row LOAD-CURRENT-PROFILE just located)
 *> ----------------------------------------------------------------
-EDIT-PROFILE.
-    PERFORM WRITE-BLANK-LINE
-    MOVE "--- Edit My Profile ---" TO WS-LINE-BUFFER
-    MOVE FUNCTION LENGTH("--- Edit My Profile ---") TO WS-LINE-LEN
-    PERFORM WRITE-LINE
-    MOVE "Press Enter to keep a displayed value." TO WS-LINE-BUFFER
-    MOVE FUNCTION LENGTH("Press Enter to keep a displayed value.")
-        TO WS-LINE-LEN
-    PERFORM WRITE-LINE
+ADD-CURRENT-PROFILE.
+    ADD 1 TO WS-PROFILE-COUNT
+    MOVE WS-USERNAME TO WS-TBL-PROFILE-USERNAME(WS-PROFILE-COUNT)
+    MOVE WS-FULL-NAME TO WS-TBL-FULL-NAME(WS-PROFILE-COUNT)
+    MOVE WS-UNIVERSITY TO WS-TBL-UNIVERSITY(WS-PROFILE-COUNT)
+    MOVE WS-MAJOR TO WS-TBL-MAJOR(WS-PROFILE-COUNT)
+    MOVE GRAD-YEAR TO WS-TBL-GRAD-YEAR(WS-PROFILE-COUNT)
+    MOVE WS-ABOUT TO WS-TBL-ABOUT(WS-PROFILE-COUNT).
 
-    MOVE "Enter First Name (blank keeps current):" TO WS-LINE-BUFFER
-    MOVE FUNCTION LENGTH("Enter First Name (blank keeps current):")
-        TO WS-LINE-LEN
+UPDATE-CURRENT-PROFILE.
+    MOVE WS-FULL-NAME TO WS-TBL-FULL-NAME(WS-PROFILE-IDX)
+    MOVE WS-UNIVERSITY TO WS-TBL-UNIVERSITY(WS-PROFILE-IDX)
+    MOVE WS-MAJOR TO WS-TBL-MAJOR(WS-PROFILE-IDX)
+    MOVE GRAD-YEAR TO WS-TBL-GRAD-YEAR(WS-PROFILE-IDX)
+    MOVE WS-ABOUT TO WS-TBL-ABOUT(WS-PROFILE-IDX).
+
+*> ----------------------------------------------------------------
+*> LOAD-CURRENT-PROFILE: locate the logged-in user's own row in the
+*> profile table (WS-PROFILE-FOUND/WS-PROFILE-IDX), used by both
+*> Create (to detect "already exists") and Edit (to detect "not
+*> created yet" and to know which row to overwrite)
+*> ----------------------------------------------------------------
+LOAD-CURRENT-PROFILE.
+    MOVE "N" TO WS-PROFILE-FOUND
+    MOVE ZERO TO WS-PROFILE-IDX
+    PERFORM VARYING WS-PROFILE-IDX FROM 1 BY 1
+        UNTIL WS-PROFILE-IDX > WS-PROFILE-COUNT
+            OR WS-PROFILE-FOUND = "Y"
+        IF FUNCTION TRIM(WS-TBL-PROFILE-USERNAME(WS-PROFILE-IDX)) =
+            FUNCTION TRIM(WS-USERNAME)
+            MOVE "Y" TO WS-PROFILE-FOUND
+        END-IF
+    END-PERFORM.
+    IF WS-PROFILE-FOUND = "Y"
+        SUBTRACT 1 FROM WS-PROFILE-IDX
+    END-IF.
+
+*> ----------------------------------------------------------------
+*> VIEW-MY-PROFILE: the logged-in user's own profile, rendered by
+*> the exact same RENDER-PROFILE-BY-USERNAME paragraph that "View a
+*> Profile" uses for looking someone else up - so what a user sees
+*> here is guaranteed to be byte-for-byte identical to how their
+*> profile appears to anyone else who looks it up, with no need to
+*> re-type their own username.
+*> ----------------------------------------------------------------
+VIEW-MY-PROFILE.
+    MOVE WS-USERNAME TO WS-PROFILE-USERNAME
+    PERFORM RENDER-PROFILE-BY-USERNAME.
+
+*> ----------------------------------------------------------------
+*> VIEW-PROFILE: look up any username's profile by name
+*> ----------------------------------------------------------------
+VIEW-PROFILE.
+    MOVE "Enter username to view: " TO WS-LINE-BUFFER
+    MOVE FUNCTION LENGTH("Enter username to view: ") TO WS-LINE-LEN
     PERFORM WRITE-PROMPT
     PERFORM READ-INPUT-LINE
-    IF FUNCTION TRIM(WS-LINE-BUFFER) NOT = SPACES
-        MOVE WS-LINE-BUFFER TO FIRST-NAME
-    END-IF
+    MOVE WS-LINE-BUFFER TO WS-PROFILE-USERNAME
+    PERFORM RENDER-PROFILE-BY-USERNAME.
 
-    MOVE "Enter Last Name (blank keeps current):" TO WS-LINE-BUFFER
-    MOVE FUNCTION LENGTH("Enter Last Name (blank keeps current):")
-        TO WS-LINE-LEN
-    PERFORM WRITE-PROMPT
-    PERFORM READ-INPUT-LINE
-    IF FUNCTION TRIM(WS-LINE-BUFFER) NOT = SPACES
-        MOVE WS-LINE-BUFFER TO LAST-NAME
-    END-IF
-
-    MOVE "Enter University (blank keeps current):" TO WS-LINE-BUFFER
-    MOVE FUNCTION LENGTH("Enter University (blank keeps current):")
-        TO WS-LINE-LEN
-    PERFORM WRITE-PROMPT
-    PERFORM READ-INPUT-LINE
-    IF FUNCTION TRIM(WS-LINE-BUFFER) NOT = SPACES
-        MOVE WS-LINE-BUFFER TO UNIVERSITY
-    END-IF
-
-    MOVE "Enter Major (blank keeps current):" TO WS-LINE-BUFFER
-    MOVE FUNCTION LENGTH("Enter Major (blank keeps current):")
-        TO WS-LINE-LEN
-    PERFORM WRITE-PROMPT
-    PERFORM READ-INPUT-LINE
-    IF FUNCTION TRIM(WS-LINE-BUFFER) NOT = SPACES
-        MOVE WS-LINE-BUFFER TO MAJOR
-    END-IF
-
-    MOVE "N" TO WS-EDIT-DONE
-    PERFORM UNTIL WS-EDIT-DONE = "Y"
-        MOVE "Enter Graduation Year (blank keeps current):"
-            TO WS-LINE-BUFFER
-        MOVE FUNCTION LENGTH(
-            "Enter Graduation Year (blank keeps current):") TO WS-LINE-LEN
-        PERFORM WRITE-PROMPT
-        PERFORM READ-INPUT-LINE
-        IF FUNCTION TRIM(WS-LINE-BUFFER) = SPACES
-            MOVE "Y" TO WS-EDIT-DONE
-        ELSE
-            MOVE SPACES TO GRAD-YEAR-INPUT
-            MOVE FUNCTION TRIM(WS-LINE-BUFFER) TO GRAD-YEAR-INPUT
-            IF GRAD-YEAR-INPUT(1:4) IS NUMERIC
-                AND GRAD-YEAR-INPUT(5:1) = SPACE
-                MOVE GRAD-YEAR-INPUT(1:4) TO GRAD-YEAR
-            ELSE
-                MOVE ZERO TO GRAD-YEAR
-            END-IF
-            IF GRAD-YEAR > 2025 AND GRAD-YEAR < 2034
-                MOVE "Y" TO WS-EDIT-DONE
-            ELSE
-                MOVE "Invalid graduation year. Please enter a year between 2026 and 2033."
-                    TO WS-LINE-BUFFER
-                MOVE FUNCTION LENGTH(
-                    "Invalid graduation year. Please enter a year between 2026 and 2033.")
-                    TO WS-LINE-LEN
-                PERFORM WRITE-LINE
-            END-IF
+*> ----------------------------------------------------------------
+*> RENDER-PROFILE-BY-USERNAME: shared lookup+display logic for
+*> WS-PROFILE-USERNAME, used by both VIEW-PROFILE and VIEW-MY-PROFILE
+*> ----------------------------------------------------------------
+RENDER-PROFILE-BY-USERNAME.
+    MOVE "N" TO WS-PROFILE-FOUND
+    PERFORM VARYING WS-PROFILE-IDX FROM 1 BY 1
+        UNTIL WS-PROFILE-IDX > WS-PROFILE-COUNT
+            OR WS-PROFILE-FOUND = "Y"
+        IF FUNCTION TRIM(WS-TBL-PROFILE-USERNAME(WS-PROFILE-IDX)) =
+            FUNCTION TRIM(WS-PROFILE-USERNAME)
+            MOVE "Y" TO WS-PROFILE-FOUND
         END-IF
     END-PERFORM
-
-    MOVE "Enter About Me (blank keeps current):" TO WS-LINE-BUFFER
-    MOVE FUNCTION LENGTH("Enter About Me (blank keeps current):")
-        TO WS-LINE-LEN
-    PERFORM WRITE-PROMPT
-    PERFORM READ-INPUT-LINE
-    IF FUNCTION TRIM(WS-LINE-BUFFER) NOT = SPACES
-        MOVE WS-LINE-BUFFER TO ABOUT-ME
+    IF WS-PROFILE-FOUND = "Y"
+        SUBTRACT 1 FROM WS-PROFILE-IDX
     END-IF
+    IF WS-PROFILE-FOUND = "N"
+        MOVE "Profile not found." TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("Profile not found.") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+    ELSE
+        MOVE "--- Profile Details ---" TO WS-LINE-BUFFER
+        MOVE FUNCTION LENGTH("--- Profile Details ---") TO WS-LINE-LEN
+        PERFORM WRITE-LINE
+        MOVE "Name:" TO WS-FIELD-LABEL
+        MOVE WS-TBL-FULL-NAME(WS-PROFILE-IDX) TO WS-FIELD-VALUE
+        PERFORM DISPLAY-PROFILE-FIELD
+        MOVE "University:" TO WS-FIELD-LABEL
+        MOVE WS-TBL-UNIVERSITY(WS-PROFILE-IDX) TO WS-FIELD-VALUE
+        PERFORM DISPLAY-PROFILE-FIELD
+        MOVE "Major:" TO WS-FIELD-LABEL
+        MOVE WS-TBL-MAJOR(WS-PROFILE-IDX) TO WS-FIELD-VALUE
+        PERFORM DISPLAY-PROFILE-FIELD
+        MOVE "Graduation Year:" TO WS-FIELD-LABEL
+        MOVE WS-TBL-GRAD-YEAR(WS-PROFILE-IDX) TO WS-FIELD-VALUE
+        PERFORM DISPLAY-PROFILE-FIELD
+        MOVE "About:" TO WS-FIELD-LABEL
+        MOVE WS-TBL-ABOUT(WS-PROFILE-IDX) TO WS-FIELD-VALUE
+        PERFORM DISPLAY-PROFILE-FIELD
+    END-IF.
 
-    MOVE "Profile updated successfully!" TO WS-LINE-BUFFER
-    MOVE FUNCTION LENGTH("Profile updated successfully!") TO WS-LINE-LEN
+DISPLAY-PROFILE-FIELD.
+    MOVE 1 TO WS-STRING-PTR
+    STRING FUNCTION TRIM(WS-FIELD-LABEL, TRAILING) DELIMITED BY SIZE
+        " " DELIMITED BY SIZE
+        FUNCTION TRIM(WS-FIELD-VALUE, TRAILING) DELIMITED BY SIZE
+        INTO WS-LINE-BUFFER WITH POINTER WS-STRING-PTR
+    END-STRING
+    COMPUTE WS-LINE-LEN = WS-STRING-PTR - 1
     PERFORM WRITE-LINE.
+
+*> ----------------------------------------------------------------
+*> LOAD-PROFILES / SAVE-PROFILES: keep the profile store in memory
+*> so an edit can safely rewrite all profiles without losing others.
+*> ----------------------------------------------------------------
+LOAD-PROFILES.
+    MOVE ZERO TO WS-PROFILE-COUNT
+    MOVE "N" TO WS-EOF
+    OPEN INPUT PROFILES-FILE
+    IF PROFILE-FILE-OK
+        PERFORM UNTIL WS-EOF = "Y"
+            READ PROFILES-FILE
+                AT END
+                    MOVE "Y" TO WS-EOF
+                NOT AT END
+                    IF WS-PROFILE-COUNT < WS-MAX-ACCOUNTS
+                        ADD 1 TO WS-PROFILE-COUNT
+                        MOVE PR-USERNAME TO
+                            WS-TBL-PROFILE-USERNAME(WS-PROFILE-COUNT)
+                        MOVE PR-FULL-NAME TO
+                            WS-TBL-FULL-NAME(WS-PROFILE-COUNT)
+                        MOVE PR-UNIVERSITY TO
+                            WS-TBL-UNIVERSITY(WS-PROFILE-COUNT)
+                        MOVE PR-MAJOR TO
+                            WS-TBL-MAJOR(WS-PROFILE-COUNT)
+                        MOVE PR-GRAD-YEAR TO
+                            WS-TBL-GRAD-YEAR(WS-PROFILE-COUNT)
+                        MOVE PR-ABOUT TO
+                            WS-TBL-ABOUT(WS-PROFILE-COUNT)
+                    END-IF
+            END-READ
+        END-PERFORM
+        CLOSE PROFILES-FILE
+    END-IF.
+
+SAVE-PROFILES.
+    OPEN OUTPUT PROFILES-FILE
+    PERFORM VARYING WS-PROFILE-IDX FROM 1 BY 1
+        UNTIL WS-PROFILE-IDX > WS-PROFILE-COUNT
+        MOVE WS-TBL-PROFILE-USERNAME(WS-PROFILE-IDX) TO PR-USERNAME
+        MOVE WS-TBL-FULL-NAME(WS-PROFILE-IDX) TO PR-FULL-NAME
+        MOVE WS-TBL-UNIVERSITY(WS-PROFILE-IDX) TO PR-UNIVERSITY
+        MOVE WS-TBL-MAJOR(WS-PROFILE-IDX) TO PR-MAJOR
+        MOVE WS-TBL-GRAD-YEAR(WS-PROFILE-IDX) TO PR-GRAD-YEAR
+        MOVE WS-TBL-ABOUT(WS-PROFILE-IDX) TO PR-ABOUT
+        WRITE PROFILE-RECORD
+    END-PERFORM
+    CLOSE PROFILES-FILE.
 
 *> ----------------------------------------------------------------
 *> LEARN-SKILL-MENU: list available skills until the user goes back
@@ -831,7 +1018,7 @@ READ-INPUT-LINE.
     MOVE SPACES TO OUTPUT-RECORD
     MOVE WS-PROMPT-BUFFER(1:WS-PROMPT-LEN) TO OUTPUT-RECORD
     MOVE FUNCTION TRIM(WS-LINE-BUFFER, TRAILING) TO
-        OUTPUT-RECORD(WS-PROMPT-LEN + 1:300 - WS-PROMPT-LEN)
+        OUTPUT-RECORD(WS-PROMPT-LEN + 1:400 - WS-PROMPT-LEN)
     COMPUTE WS-OUTPUT-LEN = WS-PROMPT-LEN +
         FUNCTION LENGTH(FUNCTION TRIM(WS-LINE-BUFFER, TRAILING))
     PERFORM WRITE-OUTPUT-RECORD
