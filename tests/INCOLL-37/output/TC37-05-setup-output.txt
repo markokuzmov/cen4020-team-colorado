@@ -7,6 +7,22 @@
   2. Log In
   3. Exit
 ========================================
+Enter your choice: 1
+ 
+--- Create New Account ---
+Enter username: viewuser
+Enter password: Hello@123
+Account created successfully!
+Welcome to InCollege, viewuser!
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
 Enter your choice: 2
  
 --- Log In ---
@@ -29,8 +45,15 @@ Enter your choice: 1
   3. View My Profile
   4. View a Profile
   5. Go Back
-Enter your choice: 3
-Profile not found.
+Enter your choice: 1
+Create/Edit Profile
+Enter First Name:Varshith
+Enter Last Name:Manne
+Enter University/College Attended:University of South Florida
+Enter Major:Computer Science
+Enter Graduation Year (YYYY):2028
+Enter About Me (optional, max 200 chars, enter blank line to skip):Testing profile persistence.
+Profile created successfully!
  
 --- Profile ---
   1. Create My Profile

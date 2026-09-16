@@ -31,10 +31,28 @@ Profile viewing was tested for:
 - Viewing updated information after editing a profile
 
 TC37-05 - View profile after restarting the program
-Expected: Previously created profile is loaded and displayed after restarting.
-Actual: Login succeeds, but View My Profile displays "Profile not found."
+
+Expected:
+The previously created profile should persist and be displayed after restarting the application.
+
+Actual:
+The program displays "Profile created successfully!" during the first run, but data/profiles.dat is not created. After restarting and logging in, View My Profile cannot find the profile.
+
 Status: FAIL
 
-TC37-05 = FAIL
-Expected: Saved profile remains viewable after restart.
-Actual: View My Profile returns "Profile not found."
+INCOLL-37 Test Summary
+
+Total Test Cases: 5
+Passed: 4
+Failed: 1
+
+Result: FAIL
+
+Profile viewing was tested for:
+- Viewing when no profile exists
+- Viewing a newly created profile
+- Viewing a profile with a blank About field
+- Viewing updated information after editing a profile
+- Viewing a saved profile after restarting the application
+
+TC37-05 failed because the created profile did not persist across program restarts.
