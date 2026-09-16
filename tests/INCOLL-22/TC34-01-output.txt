@@ -1,0 +1,76 @@
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 1
+ 
+--- Create New Account ---
+Enter username: edituser
+Enter password: Password1!
+Account created successfully!
+Welcome to InCollege, edituser!
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 2
+ 
+--- Log In ---
+Enter username: edituser
+Enter password: Password1!
+You have successfully logged in.
+Welcome, edituser!
+ 
+--- Main Menu ---
+  1. Create/Edit My Profile
+  2. Search for a Job
+  3. Find Someone You Know
+  4. Learn a New Skill
+  5. Logout
+Enter your choice: 1
+ 
+Create/Edit Profile
+Enter First Name:Ada
+Enter Last Name:Lovelace
+Enter University/College Attended:University of South Florida
+Enter Major:Computer Science
+Enter Graduation Year (YYYY):2027
+Enter About Me (optional, max 200 chars, enter blank line to skip):Original background
+Profile saved successfully!
+ 
+--- Main Menu ---
+  1. Create/Edit My Profile
+  2. Search for a Job
+  3. Find Someone You Know
+  4. Learn a New Skill
+  5. Logout
+Enter your choice: 1
+ 
+--- Edit My Profile ---
+Press Enter to keep a displayed value.
+Enter First Name (blank keeps current):
+Enter Last Name (blank keeps current):
+Enter University (blank keeps current):
+Enter Major (blank keeps current):Software Engineering
+Enter Graduation Year (blank keeps current):
+Enter About Me (blank keeps current):Updated background
+Profile updated successfully!
+ 
+--- Main Menu ---
+  1. Create/Edit My Profile
+  2. Search for a Job
+  3. Find Someone You Know
+  4. Learn a New Skill
+  5. Logout
+Enter your choice: 5
+Logging out...

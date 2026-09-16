@@ -1,0 +1,58 @@
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 1
+ 
+--- Create New Account ---
+Enter username: iouser
+Enter password: Password1!
+Account created successfully!
+Welcome to InCollege, iouser!
+ 
+========================================
+          Welcome to InCollege          
+    LinkedIn for College Students        
+========================================
+  1. Create New Account
+  2. Log In
+  3. Exit
+========================================
+Enter your choice: 2
+ 
+--- Log In ---
+Enter username: iouser
+Enter password: Password1!
+You have successfully logged in.
+Welcome, iouser!
+ 
+--- Main Menu ---
+  1. Create/Edit My Profile
+  2. Search for a Job
+  3. Find Someone You Know
+  4. Learn a New Skill
+  5. Logout
+Enter your choice: 1
+ 
+Create/Edit Profile
+Enter First Name:Grace
+Enter Last Name:Hopper
+Enter University/College Attended:University of South Florida
+Enter Major:Computer Science
+Enter Graduation Year (YYYY):2028
+Enter About Me (optional, max 200 chars, enter blank line to skip):Interested in compilers.
+Profile saved successfully!
+ 
+--- Main Menu ---
+  1. Create/Edit My Profile
+  2. Search for a Job
+  3. Find Someone You Know
+  4. Learn a New Skill
+  5. Logout
+Enter your choice: 5
+Logging out...

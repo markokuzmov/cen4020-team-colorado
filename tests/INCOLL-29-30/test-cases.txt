@@ -1,0 +1,16 @@
+INCOLL-47 through INCOLL-51 - Profile Input/Output Tests
+
+TC47-01 / TC48-01 - Profile input is read from InCollege-Input.txt
+Steps: Run the program with TC47-50-01-input.txt.
+Expected: The scripted profile values are consumed in order and the program
+shows "Profile saved successfully!" without requesting keyboard input.
+
+TC49-01 / TC50-01 - Profile console output matches InCollege-Output.txt
+Steps: Capture the console transcript while running TC47-50-01-input.txt and
+compare it byte-for-byte to InCollege-Output.txt.
+Expected: The files are identical, including combined prompt/input lines.
+
+TC51-01 - Discrepancy log
+Result: No profile input/output discrepancy was found in TC49-01.
+Compiler note: GnuCOBOL reports existing warnings for the POSIX write calls;
+the program still compiles and the transcript comparison passes.
