@@ -29,3 +29,12 @@ Profile viewing was tested for:
 - Viewing a newly created profile
 - Viewing a profile with a blank About field
 - Viewing updated information after editing a profile
+
+TC37-05 - View profile after restarting the program
+Expected: Previously created profile is loaded and displayed after restarting.
+Actual: Login succeeds, but View My Profile displays "Profile not found."
+Status: FAIL
+
+TC37-05 = FAIL
+Expected: Saved profile remains viewable after restart.
+Actual: View My Profile returns "Profile not found."
